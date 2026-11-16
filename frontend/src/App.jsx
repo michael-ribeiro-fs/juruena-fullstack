@@ -1,6 +1,10 @@
 import Header from "./components/Header/Header.jsx";
 import Hero from "./components/Hero/Hero.jsx";
 import Weather from "./components/Weather/Weather.jsx";
+import About from "./components/About/About.jsx";
+import Places from "./components/Places/Places.jsx";
+import CTA from "./components/CTA/CTA.jsx";
+import Footer from "./components/Footer/Footer.jsx";
 
 function App() {
   const handleSignInClick = () => {
@@ -23,6 +27,10 @@ function App() {
       <Header onSignInClick={handleSignInClick} onSignOut={handleSignOut} />
       <Hero />
       <Weather />
+      <About />
+      <Places />
+      <CTA onSignInClick={handleSignInClick} />
+      <Footer />
     </div>
   );
 }
