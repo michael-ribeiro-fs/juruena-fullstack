@@ -1,0 +1,28 @@
+/* ============================================================
+   PLACEHOLDER genérico (PlacesPage, FavoritesPage)
+   ============================================================ */
+
+.page-placeholder {
+  min-height: 60vh;
+  padding-top: 128px;
+  padding-bottom: 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.page-placeholder__title {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-4xl);
+  color: var(--color-text);
+  font-weight: var(--font-weight-regular);
+  margin-bottom: var(--space-md);
+}
+
+.page-placeholder__text {
+  font-size: var(--font-size-md);
+  color: var(--color-text-muted);
+  max-width: 32rem;
+}
