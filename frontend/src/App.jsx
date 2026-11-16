@@ -69,7 +69,10 @@ function App() {
         </Route>
 
         <Route path="/favoritos">
-          <FavoritesPage />
+          <FavoritesPage
+            onCreateAccountClick={() => handleOpenAuthPopup("signup")}
+            onSignInClick={() => handleOpenAuthPopup("signin")}
+          />
         </Route>
 
         <Route path="*">
