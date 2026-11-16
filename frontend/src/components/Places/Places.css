@@ -1,0 +1,108 @@
+/* ============================================================
+   PLACES — Seção de lugares (mobile-first)
+   ============================================================ */
+
+.places {
+  padding-top: var(--space-3xl);
+  padding-bottom: var(--space-3xl);
+  background-color: var(--color-bg-muted);
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+@media (min-width: 640px) {
+  .places {
+    padding-top: 96px;
+    padding-bottom: 96px;
+  }
+}
+
+/* ---------- Header da seção ---------- */
+
+.places__header {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-bottom: var(--space-2xl);
+}
+
+@media (min-width: 640px) {
+  .places__header {
+    flex-direction: row;
+    align-items: flex-end;
+  }
+}
+
+.places__eyebrow {
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-brand-green);
+  margin-bottom: var(--space-xs);
+}
+
+.places__title {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-3xl);
+  color: var(--color-text);
+  font-weight: var(--font-weight-regular);
+}
+
+@media (min-width: 640px) {
+  .places__title {
+    font-size: var(--font-size-4xl);
+  }
+}
+
+.places__subtitle {
+  font-size: var(--font-size-base);
+  color: var(--color-text-muted);
+  margin-top: var(--space-xs);
+  max-width: 32rem;
+}
+
+.places__view-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-sm-plus);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-primary);
+  transition: color var(--transition-base);
+}
+
+.places__view-all:hover {
+  color: var(--color-primary-dark);
+}
+
+.places__view-all-icon {
+  width: 1rem;
+  height: 1rem;
+  stroke: currentColor;
+}
+
+/* ---------- Grid de cards ---------- */
+
+.places__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+}
+
+@media (min-width: 768px) {
+  .places__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .places__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.places__grid-item {
+  display: flex;
+}
