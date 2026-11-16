@@ -2,7 +2,7 @@
    HEADER — Mobile-first (min-width)
    2 variantes via prop:
    - variant="transparent" (default) → home, sobre Hero escuro
-   - variant="solid" → páginas internas (/lugares, etc.)
+   - variant="solid" → páginas internas (/lugares, /favoritos, etc.)
    Ambos os estados visuais (solid + scrolled) compartilham o
    mesmo bloco CSS (.header--scrolled) por serem idênticos.
    ============================================================ */
@@ -53,7 +53,13 @@
 .header__nav {
   display: flex;
   align-items: center;
-  gap: var(--space-xl);
+  gap: var(--space-md);
+}
+
+@media (min-width: 640px) {
+  .header__nav {
+    gap: var(--space-xl);
+  }
 }
 
 .header__nav-links {
@@ -100,6 +106,99 @@
   color: var(--color-text);
 }
 
+/* ---------- Hamburguer (apenas mobile) ---------- */
+
+.header__hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 32px;
+  height: 32px;
+  padding: 6px;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-inverse);
+  transition: background-color var(--transition-base);
+}
+
+.header__hamburger:hover {
+  background-color: var(--color-white-10);
+}
+
+.header__hamburger-line {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background-color: currentColor;
+  transition:
+    transform var(--transition-base),
+    opacity var(--transition-base);
+}
+
+.header__hamburger--open .header__hamburger-line:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.header__hamburger--open .header__hamburger-line:nth-child(2) {
+  opacity: 0;
+}
+
+.header__hamburger--open .header__hamburger-line:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+@media (min-width: 640px) {
+  .header__hamburger {
+    display: none;
+  }
+}
+
+/* ---------- Menu mobile ---------- */
+
+.header__mobile-menu {
+  position: absolute;
+  top: 72px;
+  left: 0;
+  right: 0;
+  background-color: var(--color-bg-overlay);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-md);
+}
+
+@media (min-width: 640px) {
+  .header__mobile-menu {
+    display: none;
+  }
+}
+
+.header__mobile-nav {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-xs) 0;
+}
+
+.header__mobile-nav-link {
+  display: block;
+  padding: var(--space-md) var(--space-lg);
+  color: var(--color-text);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  transition:
+    background-color var(--transition-base),
+    color var(--transition-base);
+}
+
+.header__mobile-nav-link:hover {
+  background-color: var(--color-bg-muted);
+  color: var(--color-primary);
+}
+
+.header__mobile-nav-link--active {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
 /* ---------- Estado "scrolled" / "solid" ---------- */
 
 .header--scrolled {
@@ -136,4 +235,12 @@
   background-color: var(--color-primary);
   color: var(--color-surface);
   border-color: var(--color-primary);
+}
+
+.header--scrolled .header__hamburger {
+  color: var(--color-text);
+}
+
+.header--scrolled .header__hamburger:hover {
+  background-color: rgba(0, 0, 0, 0.05);
 }
