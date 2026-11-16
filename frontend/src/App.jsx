@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Switch, Route, useHistory } from "react-router-dom";
+import { Switch, Route, useHistory, useLocation } from "react-router-dom";
 
 import Header from "./components/Header/Header.jsx";
 import Footer from "./components/Footer/Footer.jsx";
@@ -12,9 +12,12 @@ import NotFoundPage from "./pages/NotFoundPage/NotFoundPage.jsx";
 
 function App() {
   const history = useHistory();
+  const { pathname } = useLocation();
 
   const [isAuthPopupOpen, setIsAuthPopupOpen] = useState(false);
   const [authMode, setAuthMode] = useState("signup");
+
+  const headerVariant = pathname === "/" ? "transparent" : "solid";
 
   const handleOpenAuthPopup = (initialMode) => {
     setAuthMode(initialMode);
@@ -30,17 +33,14 @@ function App() {
   };
 
   const handleSubmitSignUp = (formValues) => {
-    // TODO Etapa 3: chamar service de /signup
     console.log("Signup:", formValues);
   };
 
   const handleSubmitSignIn = (formValues) => {
-    // TODO Etapa 3: chamar service de /signin
     console.log("Signin:", formValues);
   };
 
   const handleSignOut = () => {
-    // TODO Etapa 3: implementar logout completo (limpar user, remover JWT)
     localStorage.removeItem("jwt");
     history.push("/");
   };
@@ -48,6 +48,7 @@ function App() {
   return (
     <div className="app">
       <Header
+        variant={headerVariant}
         onSignInClick={() => handleOpenAuthPopup("signin")}
         onSignOut={handleSignOut}
       />
@@ -61,7 +62,10 @@ function App() {
         </Route>
 
         <Route path="/lugares">
-          <PlacesPage />
+          <PlacesPage
+            onCreateAccountClick={() => handleOpenAuthPopup("signup")}
+            onSignInClick={() => handleOpenAuthPopup("signin")}
+          />
         </Route>
 
         <Route path="/favoritos">
