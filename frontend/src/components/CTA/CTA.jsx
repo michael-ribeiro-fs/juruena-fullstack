@@ -8,7 +8,7 @@ import {
 
 import "./CTA.css";
 
-function CTA({ onSignInClick }) {
+function CTA({ onCreateAccountClick, onSignInClick }) {
   return (
     <section className="cta" aria-labelledby="cta-title">
       <div className="cta__inner container">
@@ -24,7 +24,7 @@ function CTA({ onSignInClick }) {
           <div className="cta__actions">
             <button
               type="button"
-              onClick={onSignInClick}
+              onClick={onCreateAccountClick}
               className="cta__btn cta__btn--primary"
             >
               {CTA_PRIMARY_LABEL}
