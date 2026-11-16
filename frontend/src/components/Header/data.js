@@ -13,7 +13,7 @@ export const HEADER_LOGO_ALT = '';
 
 export const HEADER_NAV_LINKS = [
   { id: 'home', label: 'Início', to: '/' },
-  { id: 'places', label: 'Lugares', to: '/#lugares' },
+  { id: 'places', label: 'Lugares', to: '/lugares' },
   { id: 'about', label: 'Sobre', to: '/#sobre' },
 ];
 

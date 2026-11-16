@@ -1,5 +1,10 @@
 /* ============================================================
    HEADER — Mobile-first (min-width)
+   2 variantes via prop:
+   - variant="transparent" (default) → home, sobre Hero escuro
+   - variant="solid" → páginas internas (/lugares, etc.)
+   Ambos os estados visuais (solid + scrolled) compartilham o
+   mesmo bloco CSS (.header--scrolled) por serem idênticos.
    ============================================================ */
 
 .header {
@@ -74,6 +79,11 @@
   color: var(--color-text-inverse);
 }
 
+.header__nav-link--active {
+  color: var(--color-text-inverse);
+  font-weight: var(--font-weight-semibold);
+}
+
 .header__login-btn {
   font-size: var(--font-size-sm-plus);
   font-weight: var(--font-weight-medium);
@@ -90,7 +100,7 @@
   color: var(--color-text);
 }
 
-/* ---------- Estado "scrolled" ---------- */
+/* ---------- Estado "scrolled" / "solid" ---------- */
 
 .header--scrolled {
   background-color: var(--color-bg-overlay);
@@ -105,6 +115,10 @@
 }
 
 .header--scrolled .header__nav-link:hover {
+  color: var(--color-primary);
+}
+
+.header--scrolled .header__nav-link--active {
   color: var(--color-primary);
 }
 

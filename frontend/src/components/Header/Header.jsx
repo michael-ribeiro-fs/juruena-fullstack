@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 import {
@@ -13,7 +13,7 @@ import {
 
 import "./Header.css";
 
-function Header({ onSignInClick, onSignOut }) {
+function Header({ variant = "transparent", onSignInClick, onSignOut }) {
   const currentUser = useContext(CurrentUserContext);
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -28,7 +28,8 @@ function Header({ onSignInClick, onSignOut }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const headerClassName = isScrolled ? "header header--scrolled" : "header";
+  const isSolid = variant === "solid" || isScrolled;
+  const headerClassName = isSolid ? "header header--scrolled" : "header";
 
   return (
     <header className={headerClassName}>
@@ -44,11 +45,29 @@ function Header({ onSignInClick, onSignOut }) {
 
         <nav className="header__nav" aria-label="Navegação principal">
           <div className="header__nav-links">
-            {HEADER_NAV_LINKS.map((link) => (
-              <Link key={link.id} to={link.to} className="header__nav-link">
-                {link.label}
-              </Link>
-            ))}
+            {HEADER_NAV_LINKS.map((link) => {
+              const isAnchor = link.to.includes("#");
+
+              if (isAnchor) {
+                return (
+                  <Link key={link.id} to={link.to} className="header__nav-link">
+                    {link.label}
+                  </Link>
+                );
+              }
+
+              return (
+                <NavLink
+                  key={link.id}
+                  to={link.to}
+                  className="header__nav-link"
+                  activeClassName="header__nav-link--active"
+                  exact={link.to === "/"}
+                >
+                  {link.label}
+                </NavLink>
+              );
+            })}
           </div>
 
           {isLoggedIn ? (
