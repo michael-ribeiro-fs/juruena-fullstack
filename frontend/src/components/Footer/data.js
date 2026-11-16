@@ -15,7 +15,8 @@ export const FOOTER_TAGLINE = 'Descubra o que Juruena tem de melhor.';
 export const FOOTER_NAV_HEADING = 'Navegação';
 export const FOOTER_NAV_LINKS = [
   { id: 'home', label: 'Início', to: '/' },
-  { id: 'places', label: 'Lugares', to: '/#lugares' },
+  { id: 'places', label: 'Lugares', to: '/lugares' },
+  { id: 'favorites', label: 'Favoritos', to: '/favoritos' },
 ];
 
 export const FOOTER_CREDITS_HEADING = 'Créditos & Referências';
