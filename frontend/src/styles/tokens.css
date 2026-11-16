@@ -25,6 +25,9 @@
   --color-bg-muted: #efefea;
   --color-surface: #fdfcf9;
 
+  --color-blue-dark: #0961aa; /* CTA */
+  --color-blue-darker: #28166f; /* Footer */
+
   /* ============================================
      CORES — Texto
      ============================================ */
@@ -39,6 +42,10 @@
   --color-primary-dark: #154131;
   --color-accent: #c4703b;
   --color-accent-soft: #faf2eb;
+
+  /* Cores oficiais da bandeira de Juruena */
+  --color-brand-green: #008024;
+  --color-brand-yellow: #fffe50;
 
   /* ============================================
      CORES — Bordas
