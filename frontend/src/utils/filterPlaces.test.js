@@ -3,7 +3,7 @@
 
 import { describe, it, expect } from 'vitest';
 
-import filterPlaces from './filterPlaces';
+import { filterPlaces } from './filterPlaces';
 
 const MOCK_PLACES = [
   { id: '1', title: 'Cachoeira das Águas Claras', tag: 'Natureza' },
