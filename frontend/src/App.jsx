@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Switch, Route, useHistory, useLocation } from "react-router-dom";
 
 import Header from "./components/Header/Header.jsx";
@@ -12,7 +12,18 @@ import NotFoundPage from "./pages/NotFoundPage/NotFoundPage.jsx";
 
 function App() {
   const history = useHistory();
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
+
+  useEffect(() => {
+    if (!hash) return undefined;
+    const frame = requestAnimationFrame(() => {
+      const element = document.querySelector(hash);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [pathname, hash]);
 
   const [isAuthPopupOpen, setIsAuthPopupOpen] = useState(false);
   const [authMode, setAuthMode] = useState("signup");
