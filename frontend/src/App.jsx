@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Switch, Route, useHistory, useLocation } from "react-router-dom";
 
+import { fetchWeather } from "./services/weatherApi";
 import Header from "./components/Header/Header.jsx";
 import Footer from "./components/Footer/Footer.jsx";
 import AuthPopup from "./components/AuthPopup/AuthPopup.jsx";
@@ -16,6 +17,13 @@ function App() {
   const history = useHistory();
   const { pathname, hash } = useLocation();
 
+  const [isAuthPopupOpen, setIsAuthPopupOpen] = useState(false);
+  const [authMode, setAuthMode] = useState("signup");
+
+  const [weatherData, setWeatherData] = useState(null);
+  const [weatherLoading, setWeatherLoading] = useState(true);
+  const [weatherError, setWeatherError] = useState(false);
+
   useEffect(() => {
     if (!hash) return undefined;
     const frame = requestAnimationFrame(() => {
@@ -27,8 +35,28 @@ function App() {
     return () => cancelAnimationFrame(frame);
   }, [pathname, hash]);
 
-  const [isAuthPopupOpen, setIsAuthPopupOpen] = useState(false);
-  const [authMode, setAuthMode] = useState("signup");
+  useEffect(() => {
+    let isMounted = true;
+
+    fetchWeather()
+      .then((data) => {
+        if (!isMounted) return;
+        setWeatherData(data);
+        setWeatherError(false);
+      })
+      .catch(() => {
+        if (!isMounted) return;
+        setWeatherError(true);
+      })
+      .finally(() => {
+        if (!isMounted) return;
+        setWeatherLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const headerVariant = pathname === "/" ? "transparent" : "solid";
 
@@ -58,6 +86,10 @@ function App() {
     history.push("/");
   };
 
+  const handleFavoriteClick = () => {
+    handleOpenAuthPopup("signin");
+  };
+
   return (
     <div className="app">
       <Header
@@ -71,6 +103,10 @@ function App() {
           <MainPage
             onCreateAccountClick={() => handleOpenAuthPopup("signup")}
             onSignInClick={() => handleOpenAuthPopup("signin")}
+            onFavoriteClick={handleFavoriteClick}
+            weatherData={weatherData}
+            weatherLoading={weatherLoading}
+            weatherError={weatherError}
           />
         </Route>
 
@@ -78,6 +114,7 @@ function App() {
           <PlacesPage
             onCreateAccountClick={() => handleOpenAuthPopup("signup")}
             onSignInClick={() => handleOpenAuthPopup("signin")}
+            onFavoriteClick={handleFavoriteClick}
           />
         </Route>
 

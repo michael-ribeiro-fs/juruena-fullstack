@@ -36,7 +36,7 @@ function Footer() {
           </div>
 
           <div className="footer__nav-col">
-            <h4 className="footer__heading">{FOOTER_NAV_HEADING}</h4>
+            <h3 className="footer__heading">{FOOTER_NAV_HEADING}</h3>
             <ul className="footer__nav-list">
               {FOOTER_NAV_LINKS.map((link) => (
                 <li key={link.id} className="footer__nav-item">
@@ -49,7 +49,7 @@ function Footer() {
           </div>
 
           <div className="footer__credits-col">
-            <h4 className="footer__heading">{FOOTER_CREDITS_HEADING}</h4>
+            <h3 className="footer__heading">{FOOTER_CREDITS_HEADING}</h3>
             <div className="footer__credits-list">
               {FOOTER_CREDITS_PAIRS.map((pair) => (
                 <p key={pair.id} className="footer__credits-item">

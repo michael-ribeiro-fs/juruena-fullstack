@@ -23,6 +23,7 @@
 /* ---------- Imagem ---------- */
 
 .place-card__image-wrap {
+  position: relative;
   aspect-ratio: 4 / 3;
   width: 100%;
   overflow: hidden;
@@ -38,6 +39,46 @@
 
 .place-card:hover .place-card__image {
   transform: scale(1.05);
+}
+
+/* ---------- Botão favoritar ---------- */
+
+.place-card__favorite {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-pill);
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text);
+  box-shadow: var(--shadow-sm);
+  transition:
+    background-color var(--transition-base),
+    color var(--transition-base),
+    transform var(--transition-base);
+}
+
+.place-card__favorite:hover {
+  background-color: var(--color-text-inverse);
+  color: var(--color-accent);
+  transform: scale(1.05);
+}
+
+.place-card__favorite-icon {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  transition: fill var(--transition-base);
+}
+
+.place-card__favorite:hover .place-card__favorite-icon {
+  fill: currentColor;
 }
 
 /* ---------- Corpo ---------- */

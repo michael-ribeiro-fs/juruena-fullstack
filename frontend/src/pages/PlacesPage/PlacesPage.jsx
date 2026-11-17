@@ -20,7 +20,7 @@ import {
 
 import "./PlacesPage.css";
 
-function PlacesPage({ onCreateAccountClick, onSignInClick }) {
+function PlacesPage({ onCreateAccountClick, onSignInClick, onFavoriteClick }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("Todos");
   const searchInputRef = useRef(null);
@@ -171,6 +171,7 @@ function PlacesPage({ onCreateAccountClick, onSignInClick }) {
                   location={place.location}
                   title={place.title}
                   description={place.description}
+                  onFavoriteClick={onFavoriteClick}
                 />
               </li>
             ))}

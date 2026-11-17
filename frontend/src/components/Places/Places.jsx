@@ -13,7 +13,7 @@ import {
 
 import "./Places.css";
 
-function Places() {
+function Places({ onFavoriteClick }) {
   return (
     <section id="lugares" className="places" aria-labelledby="places-title">
       <div className="places__inner container">
@@ -53,6 +53,7 @@ function Places() {
                 location={place.location}
                 title={place.title}
                 description={place.description}
+                onFavoriteClick={onFavoriteClick}
               />
             </li>
           ))}

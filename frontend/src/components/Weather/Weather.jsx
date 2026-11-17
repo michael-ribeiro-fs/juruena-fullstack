@@ -1,7 +1,3 @@
-import { useEffect, useState } from "react";
-
-import { fetchWeather } from "../../services/weatherApi";
-
 import {
   WEATHER_ICON_IMAGE,
   WEATHER_ICON_ALT,
@@ -14,34 +10,7 @@ import {
 
 import "./Weather.css";
 
-function Weather() {
-  const [weatherData, setWeatherData] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [hasError, setHasError] = useState(false);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    fetchWeather()
-      .then((data) => {
-        if (!isMounted) return;
-        setWeatherData(data);
-        setHasError(false);
-      })
-      .catch(() => {
-        if (!isMounted) return;
-        setHasError(true);
-      })
-      .finally(() => {
-        if (!isMounted) return;
-        setIsLoading(false);
-      });
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
+function Weather({ weatherData, isLoading, hasError }) {
   if (isLoading) {
     return (
       <section className="weather" aria-label="Carregando previsão do tempo">
