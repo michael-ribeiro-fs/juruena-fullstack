@@ -5,6 +5,8 @@ import Header from "./components/Header/Header.jsx";
 import Footer from "./components/Footer/Footer.jsx";
 import AuthPopup from "./components/AuthPopup/AuthPopup.jsx";
 
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute.jsx";
+
 import MainPage from "./pages/MainPage/MainPage.jsx";
 import PlacesPage from "./pages/PlacesPage/PlacesPage.jsx";
 import FavoritesPage from "./pages/FavoritesPage/FavoritesPage.jsx";
@@ -79,12 +81,12 @@ function App() {
           />
         </Route>
 
-        <Route path="/favoritos">
+        <ProtectedRoute path="/favoritos">
           <FavoritesPage
             onCreateAccountClick={() => handleOpenAuthPopup("signup")}
             onSignInClick={() => handleOpenAuthPopup("signin")}
           />
-        </Route>
+        </ProtectedRoute>
 
         <Route path="*">
           <NotFoundPage />
