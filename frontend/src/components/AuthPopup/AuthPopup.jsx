@@ -5,9 +5,42 @@ import {
   AUTH_POPUP_CONTENT,
   AUTH_POPUP_FIELDS,
   AUTH_POPUP_CLOSE_LABEL,
+  AUTH_VALIDATION_MESSAGES,
 } from "./data";
 
 import "./AuthPopup.css";
+
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const MIN_PASSWORD_LENGTH = 8;
+const MIN_NAME_LENGTH = 2;
+
+function validateField(name, value) {
+  if (name === "name") {
+    if (!value.trim()) return AUTH_VALIDATION_MESSAGES.nameRequired;
+    if (value.trim().length < MIN_NAME_LENGTH) {
+      return AUTH_VALIDATION_MESSAGES.nameTooShort;
+    }
+    return "";
+  }
+
+  if (name === "email") {
+    if (!value.trim()) return AUTH_VALIDATION_MESSAGES.emailRequired;
+    if (!EMAIL_REGEX.test(value.trim())) {
+      return AUTH_VALIDATION_MESSAGES.emailInvalid;
+    }
+    return "";
+  }
+
+  if (name === "password") {
+    if (!value) return AUTH_VALIDATION_MESSAGES.passwordRequired;
+    if (value.length < MIN_PASSWORD_LENGTH) {
+      return AUTH_VALIDATION_MESSAGES.passwordTooShort;
+    }
+    return "";
+  }
+
+  return "";
+}
 
 function AuthPopup({
   isOpen,
@@ -22,6 +55,11 @@ function AuthPopup({
     email: "",
     password: "",
   });
+  const [touchedFields, setTouchedFields] = useState({
+    name: false,
+    email: false,
+    password: false,
+  });
   const firstInputRef = useRef(null);
 
   const content = AUTH_POPUP_CONTENT[mode];
@@ -30,9 +68,18 @@ function AuthPopup({
     ? AUTH_POPUP_FIELDS.passwordSignup
     : AUTH_POPUP_FIELDS.passwordSignin;
 
+  const errors = {
+    name: isSignup ? validateField("name", formValues.name) : "",
+    email: validateField("email", formValues.email),
+    password: validateField("password", formValues.password),
+  };
+
+  const hasErrors = Object.values(errors).some((error) => error !== "");
+
   useEffect(() => {
     if (isOpen) {
       setFormValues({ name: "", email: "", password: "" });
+      setTouchedFields({ name: false, email: false, password: false });
       if (firstInputRef.current) {
         firstInputRef.current.focus();
       }
@@ -64,8 +111,18 @@ function AuthPopup({
     setFormValues((previous) => ({ ...previous, [name]: value }));
   };
 
+  const handleBlur = (event) => {
+    const { name } = event.target;
+    setTouchedFields((previous) => ({ ...previous, [name]: true }));
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    setTouchedFields({ name: true, email: true, password: true });
+
+    if (hasErrors) return;
+
     if (isSignup) {
       onSubmitSignUp(formValues);
     } else {
@@ -78,6 +135,15 @@ function AuthPopup({
 
   const handleBackdropClick = (event) => {
     if (event.target === event.currentTarget) onClose();
+  };
+
+  const renderError = (fieldName) => {
+    if (!touchedFields[fieldName] || !errors[fieldName]) return null;
+    return (
+      <span className="modal__error" role="alert">
+        {errors[fieldName]}
+      </span>
+    );
   };
 
   return (
@@ -115,7 +181,7 @@ function AuthPopup({
           <p className="modal__desc">{content.description}</p>
         </div>
 
-        <form className="modal__form" onSubmit={handleSubmit}>
+        <form className="modal__form" onSubmit={handleSubmit} noValidate>
           {isSignup && (
             <div className="modal__field">
               <label htmlFor="auth-name" className="modal__label">
@@ -125,15 +191,26 @@ function AuthPopup({
                 id="auth-name"
                 name="name"
                 type="text"
-                className="modal__input"
+                className={
+                  touchedFields.name && errors.name
+                    ? "modal__input modal__input--invalid"
+                    : "modal__input"
+                }
                 placeholder={AUTH_POPUP_FIELDS.name.placeholder}
                 autoComplete={AUTH_POPUP_FIELDS.name.autoComplete}
                 value={formValues.name}
                 onChange={handleChange}
-                minLength={2}
+                onBlur={handleBlur}
+                aria-invalid={Boolean(touchedFields.name && errors.name)}
+                aria-describedby={
+                  touchedFields.name && errors.name ? "auth-name-error" : null
+                }
                 required
                 ref={firstInputRef}
               />
+              {renderError("name") && (
+                <span id="auth-name-error">{renderError("name")}</span>
+              )}
             </div>
           )}
 
@@ -145,14 +222,26 @@ function AuthPopup({
               id="auth-email"
               name="email"
               type="email"
-              className="modal__input"
+              className={
+                touchedFields.email && errors.email
+                  ? "modal__input modal__input--invalid"
+                  : "modal__input"
+              }
               placeholder={AUTH_POPUP_FIELDS.email.placeholder}
               autoComplete={AUTH_POPUP_FIELDS.email.autoComplete}
               value={formValues.email}
               onChange={handleChange}
+              onBlur={handleBlur}
+              aria-invalid={Boolean(touchedFields.email && errors.email)}
+              aria-describedby={
+                touchedFields.email && errors.email ? "auth-email-error" : null
+              }
               required
               ref={isSignup ? null : firstInputRef}
             />
+            {renderError("email") && (
+              <span id="auth-email-error">{renderError("email")}</span>
+            )}
           </div>
 
           <div className="modal__field">
@@ -163,14 +252,27 @@ function AuthPopup({
               id="auth-password"
               name="password"
               type="password"
-              className="modal__input"
+              className={
+                touchedFields.password && errors.password
+                  ? "modal__input modal__input--invalid"
+                  : "modal__input"
+              }
               placeholder={passwordField.placeholder}
               autoComplete={passwordField.autoComplete}
               value={formValues.password}
               onChange={handleChange}
-              minLength={8}
+              onBlur={handleBlur}
+              aria-invalid={Boolean(touchedFields.password && errors.password)}
+              aria-describedby={
+                touchedFields.password && errors.password
+                  ? "auth-password-error"
+                  : null
+              }
               required
             />
+            {renderError("password") && (
+              <span id="auth-password-error">{renderError("password")}</span>
+            )}
           </div>
 
           <button type="submit" className="modal__submit">

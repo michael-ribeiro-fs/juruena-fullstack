@@ -110,6 +110,22 @@
   border-color: var(--color-primary);
 }
 
+.modal__input--invalid {
+  border-color: var(--color-accent);
+}
+
+.modal__input--invalid:focus {
+  border-color: var(--color-accent);
+}
+
+.modal__error {
+  display: block;
+  margin-top: var(--space-2xs);
+  font-size: var(--font-size-xs);
+  color: var(--color-accent);
+  font-weight: var(--font-weight-medium);
+}
+
 .modal__submit {
   width: 100%;
   padding: var(--space-sm);

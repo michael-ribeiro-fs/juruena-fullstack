@@ -47,3 +47,12 @@ export const AUTH_POPUP_FIELDS = {
 };
 
 export const AUTH_POPUP_CLOSE_LABEL = 'Fechar popup de autenticação';
+
+export const AUTH_VALIDATION_MESSAGES = {
+  nameRequired: 'Por favor, informe seu nome.',
+  nameTooShort: 'O nome deve ter pelo menos 2 caracteres.',
+  emailRequired: 'Por favor, informe seu e-mail.',
+  emailInvalid: 'Informe um e-mail válido (exemplo@dominio.com).',
+  passwordRequired: 'Por favor, informe sua senha.',
+  passwordTooShort: 'A senha deve ter pelo menos 8 caracteres.',
+};
