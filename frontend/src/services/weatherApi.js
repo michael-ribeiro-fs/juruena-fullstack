@@ -12,7 +12,7 @@ const CURRENT_FIELDS = 'temperature_2m,apparent_temperature,weather_code';
 const DAILY_FIELDS = 'weather_code,temperature_2m_max,temperature_2m_min';
 const FORECAST_DAYS = 4;
 
-function buildWeatherUrl() {
+export function buildWeatherUrl() {
   const params = new URLSearchParams({
     latitude: JURUENA_LATITUDE,
     longitude: JURUENA_LONGITUDE,

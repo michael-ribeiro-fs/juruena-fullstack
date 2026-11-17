@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import PlaceCard from "../../components/PlaceCard/PlaceCard.jsx";
 import CTA from "../../components/CTA/CTA.jsx";
 import { PLACES_LIST } from "../../components/Places/data";
+import { filterPlaces } from "../../utils/filterPlaces";
 
 import {
   PLACES_PAGE_EYEBROW,
@@ -25,16 +26,7 @@ function PlacesPage({ onCreateAccountClick, onSignInClick }) {
   const searchInputRef = useRef(null);
 
   const normalizedQuery = searchQuery.trim().toLowerCase();
-
-  const filteredPlaces = PLACES_LIST.filter((place) => {
-    const matchesCategory =
-      activeCategory === "Todos" || place.tag === activeCategory;
-    const matchesQuery =
-      normalizedQuery === "" ||
-      place.title.toLowerCase().includes(normalizedQuery);
-
-    return matchesCategory && matchesQuery;
-  });
+  const filteredPlaces = filterPlaces(PLACES_LIST, activeCategory, searchQuery);
 
   const resultsLabel =
     filteredPlaces.length === 1
