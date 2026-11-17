@@ -5,6 +5,7 @@
     "import/no-unresolved": [
       "error",
       { "ignore": ["^vite$", "^@vitejs/plugin-react$"] }
-    ]
+    ],
+    "import/prefer-default-export": "off"
   }
 }
