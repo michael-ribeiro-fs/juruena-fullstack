@@ -6,6 +6,7 @@ import Header from "./components/Header/Header.jsx";
 import Footer from "./components/Footer/Footer.jsx";
 import AuthPopup from "./components/AuthPopup/AuthPopup.jsx";
 import { AUTH_PROTECTED_ROUTE_MESSAGE } from "./components/AuthPopup/data";
+import CookieBanner from "./components/CookieBanner/CookieBanner.jsx";
 
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute.jsx";
 
@@ -158,6 +159,8 @@ function App() {
         onSubmitSignIn={handleSubmitSignIn}
         message={authMessage}
       />
+
+      <CookieBanner />
     </div>
   );
 }
