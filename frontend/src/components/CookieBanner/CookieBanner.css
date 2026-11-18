@@ -1,7 +1,3 @@
-/* ============================================================
-   COOKIE BANNER — Aviso de cookies (bottom-right)
-   ============================================================ */
-
 .cookie-banner {
   position: fixed;
   bottom: var(--space-md);

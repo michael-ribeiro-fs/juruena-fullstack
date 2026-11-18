@@ -1,7 +1,3 @@
-// Banner de cookies (LGPD/GDPR).
-// Lê consentimento do localStorage. Se não houver, aparece após 200ms.
-// Ao aceitar/recusar, persiste a escolha e anima a saída.
-
 import { useEffect, useState } from "react";
 
 import {

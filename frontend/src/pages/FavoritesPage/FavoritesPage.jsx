@@ -1,6 +1,3 @@
-// Página /favoritos — versão APENAS visual (empty state estático).
-// Header, Footer e AuthPopup são renderizados pelo App; a proteção de rota
-// (ProtectedRoute) será adicionada em outra etapa e não existe aqui.
 import { Link } from "react-router-dom";
 
 import CTA from "../../components/CTA/CTA.jsx";

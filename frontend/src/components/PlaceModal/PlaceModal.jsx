@@ -1,7 +1,3 @@
-// Modal de detalhes do lugar: imagem grande + descrição pequena abaixo.
-// Gerencia: trava scroll do body, fecha com Escape, fecha ao clicar no backdrop.
-// Retorna null quando `place` é null (modal fechado).
-
 import { useEffect } from "react";
 
 import "./PlaceModal.css";

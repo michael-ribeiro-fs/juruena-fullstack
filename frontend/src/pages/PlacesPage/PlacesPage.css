@@ -1,7 +1,3 @@
-/* ============================================================
-   PLACES PAGE — Catálogo com busca e filtros (mobile-first)
-   ============================================================ */
-
 .catalog {
   min-height: 60vh;
   padding-top: 112px;
@@ -315,12 +311,6 @@
   background-color: var(--color-primary);
   color: var(--color-text-inverse);
 }
-
-/* ---------- Placeholder compartilhado (FavoritesPage) ----------
-   ⚠️ TEMPORÁRIO: será removido no Bloco 11 quando FavoritesPage
-   receber CSS próprio. Mantido aqui para não quebrar a página
-   /favoritos enquanto é placeholder.
-   ---------------------------------------------------------------- */
 
 .page-placeholder {
   min-height: 60vh;
