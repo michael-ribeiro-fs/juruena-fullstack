@@ -5,6 +5,7 @@ import { fetchWeather } from "./services/weatherApi";
 import Header from "./components/Header/Header.jsx";
 import Footer from "./components/Footer/Footer.jsx";
 import AuthPopup from "./components/AuthPopup/AuthPopup.jsx";
+import { AUTH_PROTECTED_ROUTE_MESSAGE } from "./components/AuthPopup/data";
 
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute.jsx";
 
@@ -15,25 +16,39 @@ import NotFoundPage from "./pages/NotFoundPage/NotFoundPage.jsx";
 
 function App() {
   const history = useHistory();
-  const { pathname, hash } = useLocation();
+  const { pathname, hash, state: locationState } = useLocation();
 
   const [isAuthPopupOpen, setIsAuthPopupOpen] = useState(false);
   const [authMode, setAuthMode] = useState("signup");
+  const [authMessage, setAuthMessage] = useState("");
 
   const [weatherData, setWeatherData] = useState(null);
   const [weatherLoading, setWeatherLoading] = useState(true);
   const [weatherError, setWeatherError] = useState(false);
 
   useEffect(() => {
-    if (!hash) return undefined;
-    const frame = requestAnimationFrame(() => {
-      const element = document.querySelector(hash);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    });
-    return () => cancelAnimationFrame(frame);
+    if (hash) {
+      const frame = requestAnimationFrame(() => {
+        const element = document.querySelector(hash);
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      });
+      return () => cancelAnimationFrame(frame);
+    }
+
+    window.scrollTo(0, 0);
+    return undefined;
   }, [pathname, hash]);
+
+  useEffect(() => {
+    if (locationState && locationState.requiresAuth) {
+      setAuthMessage(AUTH_PROTECTED_ROUTE_MESSAGE);
+      setAuthMode("signin");
+      setIsAuthPopupOpen(true);
+      history.replace({ ...history.location, state: {} });
+    }
+  }, [locationState, history]);
 
   useEffect(() => {
     let isMounted = true;
@@ -62,11 +77,13 @@ function App() {
 
   const handleOpenAuthPopup = (initialMode) => {
     setAuthMode(initialMode);
+    setAuthMessage("");
     setIsAuthPopupOpen(true);
   };
 
   const handleCloseAuthPopup = () => {
     setIsAuthPopupOpen(false);
+    setAuthMessage("");
   };
 
   const handleSwitchAuthMode = () => {
@@ -139,6 +156,7 @@ function App() {
         onSwitchMode={handleSwitchAuthMode}
         onSubmitSignUp={handleSubmitSignUp}
         onSubmitSignIn={handleSubmitSignIn}
+        message={authMessage}
       />
     </div>
   );

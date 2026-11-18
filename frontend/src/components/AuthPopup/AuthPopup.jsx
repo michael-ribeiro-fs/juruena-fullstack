@@ -49,6 +49,7 @@ function AuthPopup({
   onSwitchMode,
   onSubmitSignUp,
   onSubmitSignIn,
+  message = "",
 }) {
   const [formValues, setFormValues] = useState({
     name: "",
@@ -179,6 +180,11 @@ function AuthPopup({
             {content.title}
           </h2>
           <p className="modal__desc">{content.description}</p>
+          {message && (
+            <p className="modal__message" role="status">
+              {message}
+            </p>
+          )}
         </div>
 
         <form className="modal__form" onSubmit={handleSubmit} noValidate>

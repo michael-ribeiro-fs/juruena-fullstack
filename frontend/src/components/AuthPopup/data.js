@@ -56,3 +56,5 @@ export const AUTH_VALIDATION_MESSAGES = {
   passwordRequired: 'Por favor, informe sua senha.',
   passwordTooShort: 'A senha deve ter pelo menos 8 caracteres.',
 };
+
+export const AUTH_PROTECTED_ROUTE_MESSAGE = 'Registre-se ou entre na sua conta para acessar seus favoritos.';
