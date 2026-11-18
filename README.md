@@ -4,7 +4,7 @@ Guia digital de lugares, cultura e sabores de Juruena, Mato Grosso.
 
 > **Status:** Etapa 1 - Frontend concluída. Backend e integração full-stack nas próximas entregas.
 
-**Deploy:** [ADICIONAR URL DO DEPLOY]
+**Deploy:** https://michael-ribeiro-fs.github.io/juruena-fullstack/
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)
