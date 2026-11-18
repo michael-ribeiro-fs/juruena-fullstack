@@ -9,7 +9,7 @@
    troque por:
    import heroImage from "../../assets/images/hero.jpg";
    E use heroImage no lugar da string. */
-export const HERO_IMAGE_URL = 'https://lh3.googleusercontent.com/aida-public/AB6AXuCOi8sWMS8URCyZB-nBuH_N8CFZ4sIA_9AwFXKyVBM4G2DY7swWP1HmqCrsaJ8YOwVo5g9T6P87uNa2fa7JJkDuMaJYIGxt_TwysHNnBE3jOba9RdZdbeN23slhKPMWd-FrRlcw4ytuTFkSA-IjslCMRbOsL2JB-4ndNPYen75d1Cd50vzK_EK4A2qnPJ4yxqDmVVs4_uTxfrY4IHks362YkRFBL0y1paMKkAnBmNU';
+export const HERO_IMAGE_URL = 'https://i.ytimg.com/vi/52XFyzsWCWY/maxresdefault.jpg';
 
 export const HERO_IMAGE_ALT = 'Panorâmica aérea do Rio Juruena serpenteando pela Amazônia e Cerrado';
 
