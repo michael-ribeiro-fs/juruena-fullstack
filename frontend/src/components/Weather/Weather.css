@@ -1,0 +1,174 @@
+.weather {
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-bg-subtle);
+}
+
+.weather__inner {
+  padding-top: var(--space-lg);
+  padding-bottom: var(--space-lg);
+}
+
+/* ---------- Loading e Erro ---------- */
+
+.weather__loading,
+.weather__error {
+  font-size: var(--font-size-sm-plus);
+  color: var(--color-text-muted);
+  text-align: center;
+  padding: var(--space-xl) 0;
+}
+
+.weather__error {
+  color: var(--color-accent);
+}
+
+.weather__row {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-lg);
+}
+
+@media (min-width: 1024px) {
+  .weather__row {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+/* ---------- Clima atual ---------- */
+
+.weather__current {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  padding-right: 0;
+}
+
+@media (min-width: 1024px) {
+  .weather__current {
+    padding-right: var(--space-xl);
+    border-right: 1px solid var(--color-border);
+  }
+}
+
+.weather__current-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.weather__icon-box {
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+}
+
+.weather__icon {
+  width: 3rem;
+  height: 3rem;
+}
+
+.weather__temp-row {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+}
+
+.weather__temp {
+  font-size: var(--font-size-3xl);
+  font-family: var(--font-family-display);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.weather__feels {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-regular);
+}
+
+.weather__desc {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+  margin-top: 0.125rem;
+}
+
+.weather__desc-text {
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-muted);
+}
+
+/* ---------- Previsão ---------- */
+
+.weather__forecast {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-md);
+  flex: 1;
+}
+
+@media (min-width: 640px) {
+  .weather__forecast {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-xl);
+  }
+}
+
+@media (min-width: 1024px) {
+  .weather__forecast {
+    padding-left: var(--space-md);
+  }
+}
+
+.weather__day {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-2xs);
+  padding: var(--space-2xs) 0;
+}
+
+.weather__day-name {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.weather__day-temps {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.weather__day-temp-high {
+  color: var(--color-text);
+  font-weight: var(--font-weight-medium);
+}
+
+.weather__day-cond {
+  font-size: var(--font-size-2xs);
+  color: var(--color-text-muted);
+}
+
+/* ---------- Nota ---------- */
+
+.weather__note {
+  margin-top: var(--space-sm);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--color-border-soft);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--font-size-2xs);
+  color: var(--color-text-muted);
+}

@@ -1,0 +1,126 @@
+.cookie-banner {
+  position: fixed;
+  bottom: var(--space-md);
+  right: var(--space-md);
+  z-index: var(--z-cookie);
+  width: 360px;
+  max-width: calc(100% - 2 * var(--space-md));
+  padding: var(--space-lg);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-xl);
+  animation: cookie-banner-slide-in var(--transition-slow) ease-out;
+}
+
+.cookie-banner--leaving {
+  animation: cookie-banner-slide-out var(--transition-slow) ease-in forwards;
+}
+
+/* ---------- Conteúdo ---------- */
+
+.cookie-banner__title {
+  font-family: var(--font-family-display);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+  line-height: 1.3;
+  margin-bottom: var(--space-xs);
+}
+
+.cookie-banner__text {
+  font-size: var(--font-size-sm);
+  line-height: 1.625;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-sm);
+}
+
+.cookie-banner__link {
+  display: inline-block;
+  font-size: var(--font-size-sm);
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  margin-bottom: var(--space-md);
+  transition: color var(--transition-base);
+}
+
+.cookie-banner__link:hover {
+  color: var(--color-primary-dark);
+}
+
+/* ---------- Botões ---------- */
+
+.cookie-banner__actions {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.cookie-banner__btn {
+  flex: 1;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  transition:
+    background-color var(--transition-base),
+    color var(--transition-base),
+    border-color var(--transition-base);
+}
+
+.cookie-banner__btn--primary {
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+.cookie-banner__btn--primary:hover {
+  background-color: var(--color-primary-dark);
+}
+
+.cookie-banner__btn--secondary {
+  background-color: transparent;
+  color: var(--color-primary);
+  border: 1px solid var(--color-primary);
+}
+
+.cookie-banner__btn--secondary:hover {
+  background-color: var(--color-bg-subtle);
+}
+
+/* ---------- Mobile: full-width bottom ---------- */
+
+@media (max-width: 480px) {
+  .cookie-banner {
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    max-width: 100%;
+    border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+    padding: var(--space-md);
+  }
+}
+
+/* ---------- Animações ---------- */
+
+@keyframes cookie-banner-slide-in {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes cookie-banner-slide-out {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
