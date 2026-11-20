@@ -117,38 +117,52 @@ function App() {
       />
 
       <Switch>
-        <Route exact path="/">
-          <MainPage
-            onCreateAccountClick={() => handleOpenAuthPopup("signup")}
-            onSignInClick={() => handleOpenAuthPopup("signin")}
-            onFavoriteClick={handleFavoriteClick}
-            weatherData={weatherData}
-            weatherLoading={weatherLoading}
-            weatherError={weatherError}
-          />
-        </Route>
+        <Route
+          exact
+          path="/"
+          render={() => (
+            <>
+              <MainPage
+                onCreateAccountClick={() => handleOpenAuthPopup("signup")}
+                onSignInClick={() => handleOpenAuthPopup("signin")}
+                onFavoriteClick={handleFavoriteClick}
+                weatherData={weatherData}
+                weatherLoading={weatherLoading}
+                weatherError={weatherError}
+              />
+              <Footer />
+            </>
+          )}
+        />
 
-        <Route path="/lugares">
-          <PlacesPage
-            onCreateAccountClick={() => handleOpenAuthPopup("signup")}
-            onSignInClick={() => handleOpenAuthPopup("signin")}
-            onFavoriteClick={handleFavoriteClick}
-          />
-        </Route>
+        <Route
+          path="/lugares"
+          render={() => (
+            <>
+              <PlacesPage
+                onCreateAccountClick={() => handleOpenAuthPopup("signup")}
+                onSignInClick={() => handleOpenAuthPopup("signin")}
+                onFavoriteClick={handleFavoriteClick}
+              />
+              <Footer />
+            </>
+          )}
+        />
 
         <ProtectedRoute path="/favoritos">
-          <FavoritesPage
-            onCreateAccountClick={() => handleOpenAuthPopup("signup")}
-            onSignInClick={() => handleOpenAuthPopup("signin")}
-          />
+          <>
+            <FavoritesPage
+              onCreateAccountClick={() => handleOpenAuthPopup("signup")}
+              onSignInClick={() => handleOpenAuthPopup("signin")}
+            />
+            <Footer />
+          </>
         </ProtectedRoute>
 
         <Route path="*">
           <NotFoundPage />
         </Route>
       </Switch>
-
-      <Footer />
 
       <AuthPopup
         isOpen={isAuthPopupOpen}
