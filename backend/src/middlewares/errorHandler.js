@@ -4,31 +4,48 @@ const { AppError } = require('../errors');
 const { HTTP_STATUS, ERROR_MESSAGES } = require('../config/constants');
 const logger = require('../logger');
 
+function isCelebrateError(err) {
+  if (err.name === 'CelebrateError') return true;
+  if (err.constructor && err.constructor.name === 'CelebrateError') return true;
+  if (err.details instanceof Map && err.details.size > 0) return true;
+  return false;
+}
+
+function extractCelebrateMessage(err) {
+  if (!(err.details instanceof Map)) {
+    return ERROR_MESSAGES.VALIDATION_ERROR;
+  }
+  const firstEntry = err.details.values().next().value;
+  const validationError = firstEntry && firstEntry.details && firstEntry.details[0];
+  return validationError
+    ? validationError.message
+    : ERROR_MESSAGES.VALIDATION_ERROR;
+}
+
 function normalizeError(err) {
   if (err instanceof AppError) {
     return { message: err.message, statusCode: err.statusCode };
   }
-  if (err.name === 'CelebrateError') {
-    const firstEntry = err.details.values().next().value;
-    const validationError = firstEntry && firstEntry.details && firstEntry.details[0];
+  if (isCelebrateError(err)) {
     return {
-      message: validationError
-        ? validationError.message
-        : ERROR_MESSAGES.VALIDATION_ERROR,
+      message: extractCelebrateMessage(err),
       statusCode: HTTP_STATUS.BAD_REQUEST,
     };
   }
   if (err.name === 'ValidationError') {
+    return { message: err.message, statusCode: HTTP_STATUS.BAD_REQUEST };
+  }
+  if (err.name === 'CastError') {
+    return { message: 'ID inválido', statusCode: HTTP_STATUS.BAD_REQUEST };
+  }
+  if (err.name === 'SyntaxError' && err.status === 400) {
     return {
-      message: err.message,
+      message: 'JSON inválido no corpo da requisição',
       statusCode: HTTP_STATUS.BAD_REQUEST,
     };
   }
-  if (err.name === 'CastError') {
-    return {
-      message: 'ID inválido',
-      statusCode: HTTP_STATUS.BAD_REQUEST,
-    };
+  if (err.type === 'entity.too.large') {
+    return { message: 'Corpo da requisição muito grande', statusCode: 413 };
   }
   if (err.code === 11000) {
     return {
