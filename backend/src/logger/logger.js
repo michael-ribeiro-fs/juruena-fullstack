@@ -22,9 +22,6 @@ const logger = winston.createLogger({
       filename: path.join(LOG_DIR, 'error.log'),
       level: 'error',
     }),
-    new winston.transports.File({
-      filename: path.join(LOG_DIR, 'request.log'),
-    }),
   ],
 });
 

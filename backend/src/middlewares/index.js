@@ -5,6 +5,7 @@ const asyncHandler = require('./asyncHandler');
 const checkAdmin = require('./checkAdmin');
 const errorHandler = require('./errorHandler');
 const notFound = require('./notFound');
+const requestLogger = require('./requestLogger');
 const { applySecurity, authLimiter } = require('./security');
 const validate = require('./validate');
 
@@ -14,6 +15,7 @@ module.exports = {
   checkAdmin,
   errorHandler,
   notFound,
+  requestLogger,
   applySecurity,
   authLimiter,
   validate,
