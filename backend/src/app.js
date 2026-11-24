@@ -2,11 +2,13 @@
 
 const express = require('express');
 
-const { errorHandler, notFound } = require('./middlewares');
+const { applySecurity, errorHandler, notFound } = require('./middlewares');
 const routes = require('./routes');
 const { HTTP_STATUS } = require('./config/constants');
 
 const app = express();
+
+applySecurity(app);
 
 app.use(express.json());
 
