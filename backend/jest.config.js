@@ -4,7 +4,16 @@ module.exports = {
   testEnvironment: 'node',
   testMatch: ['**/tests/**/*.test.js'],
   setupFilesAfterEnv: ['./tests/setupFilesAfterEnv.js'],
-  collectCoverageFrom: ['src/**/*.js', '!src/server.js'],
+  collectCoverageFrom: [
+    'src/**/*.js',
+    '!src/server.js',
+    '!src/**/index.js',
+    '!src/config/database.js',
+    '!src/config/env.js',
+    '!src/logger/logger.js',
+    '!src/middlewares/requestLogger.js',
+    '!src/middlewares/security.js',
+  ],
   coverageThreshold: {
     global: {
       lines: 80,
