@@ -1,11 +1,11 @@
-"use strict";
+'use strict';
 
-require("dotenv").config();
-const mongoose = require("mongoose");
+require('dotenv').config();
+const mongoose = require('mongoose');
 
 beforeAll(async () => {
   if (!process.env.MONGO_URI_TEST) {
-    throw new Error("MONGO_URI_TEST não definida no .env");
+    throw new Error('MONGO_URI_TEST não definida no .env');
   }
   if (mongoose.connection.readyState === 0) {
     await mongoose.connect(process.env.MONGO_URI_TEST, {
