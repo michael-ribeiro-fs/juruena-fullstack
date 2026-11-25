@@ -192,8 +192,6 @@ describe('DELETE /api/favorites/:placeId', () => {
   });
 
   it('impede user B de deletar favorito de user A (404 + dado preservado)', async () => {
-    // A query do controller já filtra por user, então user B não encontra
-    // o favorito de user A → 404. O importante é que o dado de A permanece.
     const tokenB = await createAndLogin(userB);
     const res = await request(app)
       .delete(`/api/favorites/${placeId}`)

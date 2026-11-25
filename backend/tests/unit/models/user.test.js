@@ -12,11 +12,9 @@ describe('models/user — hook pre-save', () => {
 
     const originalHash = user.password;
 
-    // Modifica outro campo (name) — password NÃO é modificado
     user.name = 'Test Updated';
     await user.save();
 
-    // O hash deve ser exatamente o mesmo (branch `if (!this.isModified('password'))` executado)
     expect(user.password).toBe(originalHash);
   });
 
