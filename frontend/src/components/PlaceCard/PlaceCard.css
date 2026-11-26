@@ -1,3 +1,7 @@
+/* ============================================================
+   PLACE CARD — Card individual de lugar
+   ============================================================ */
+
 .place-card {
   background-color: var(--color-surface);
   border-radius: var(--radius-lg);
@@ -63,6 +67,14 @@
   background-color: var(--color-text-inverse);
   color: var(--color-accent);
   transform: scale(1.05);
+}
+
+.place-card__favorite--active {
+  color: var(--color-accent);
+}
+
+.place-card__favorite--active .place-card__favorite-icon {
+  fill: currentColor;
 }
 
 .place-card__favorite-icon {

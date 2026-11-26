@@ -5,12 +5,14 @@ import PlaceModal from "../PlaceModal/PlaceModal.jsx";
 import "./PlaceCard.css";
 
 function PlaceCard({
+  placeId,
   image,
   alt,
   tag,
   location,
   title,
   description,
+  isFavorited = false,
   onFavoriteClick,
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,7 +22,7 @@ function PlaceCard({
 
   const handleFavoriteClick = (event) => {
     event.stopPropagation();
-    onFavoriteClick();
+    onFavoriteClick(placeId);
   };
 
   const handleCardKeyDown = (event) => {
@@ -29,6 +31,10 @@ function PlaceCard({
       handleCardClick();
     }
   };
+
+  const favoriteClassName = isFavorited
+    ? "place-card__favorite place-card__favorite--active"
+    : "place-card__favorite";
 
   return (
     <>
@@ -48,9 +54,10 @@ function PlaceCard({
           />
           <button
             type="button"
-            className="place-card__favorite"
+            className={favoriteClassName}
             onClick={handleFavoriteClick}
             aria-label={`Salvar ${title} nos favoritos`}
+            aria-pressed={isFavorited}
           >
             <svg
               className="place-card__favorite-icon"

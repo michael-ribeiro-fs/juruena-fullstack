@@ -25,6 +25,7 @@ function PlacesPage({
   places = [],
   placesLoading = false,
   placesError = false,
+  favoritePlaceIds = new Set(),
   onCreateAccountClick,
   onSignInClick,
   onFavoriteClick,
@@ -183,12 +184,14 @@ function PlacesPage({
                 {filteredPlaces.map((place) => (
                   <li key={place._id} className="places__grid-item">
                     <PlaceCard
+                      placeId={place._id}
                       image={place.image}
                       alt={place.alt}
                       tag={place.tag}
                       location={place.location}
                       title={place.title}
                       description={place.description}
+                      isFavorited={favoritePlaceIds.has(place._id)}
                       onFavoriteClick={onFavoriteClick}
                     />
                   </li>

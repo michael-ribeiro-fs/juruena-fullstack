@@ -12,7 +12,11 @@ import {
 
 import "./Places.css";
 
-function Places({ places = [], onFavoriteClick }) {
+function Places({
+  places = [],
+  favoritePlaceIds = new Set(),
+  onFavoriteClick,
+}) {
   return (
     <section id="lugares" className="places" aria-labelledby="places-title">
       <div className="places__inner container">
@@ -46,12 +50,14 @@ function Places({ places = [], onFavoriteClick }) {
           {places.map((place) => (
             <li key={place._id} className="places__grid-item">
               <PlaceCard
+                placeId={place._id}
                 image={place.image}
                 alt={place.alt}
                 tag={place.tag}
                 location={place.location}
                 title={place.title}
                 description={place.description}
+                isFavorited={favoritePlaceIds.has(place._id)}
                 onFavoriteClick={onFavoriteClick}
               />
             </li>
