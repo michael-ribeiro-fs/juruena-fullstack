@@ -9,6 +9,7 @@ import {
   HEADER_NAV_LINKS,
   HEADER_SIGN_IN_LABEL,
   HEADER_SIGN_OUT_LABEL,
+  HEADER_ADMIN_LINK,
   HEADER_MENU_OPEN_LABEL,
   HEADER_MENU_CLOSE_LABEL,
 } from "./data";
@@ -53,8 +54,13 @@ function Header({ variant = "transparent", onSignInClick, onSignOut }) {
   const handleToggleMenu = () => setIsMenuOpen((previous) => !previous);
   const handleCloseMenu = () => setIsMenuOpen(false);
 
+  const navLinks =
+    currentUser && currentUser.role === "admin"
+      ? [...HEADER_NAV_LINKS, HEADER_ADMIN_LINK]
+      : HEADER_NAV_LINKS;
+
   const renderNavLinks = (linkClassName, activeClassName) =>
-    HEADER_NAV_LINKS.map((link) => {
+    navLinks.map((link) => {
       const isAnchor = link.to.includes("#");
 
       if (isAnchor) {
