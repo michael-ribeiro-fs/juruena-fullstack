@@ -13,10 +13,6 @@ async function start() {
     process.exit(1);
   }
 
-  app.listen(PORT, () => {
-    logger.info(`Servidor rodando em http://localhost:${PORT}`);
-  });
-
   try {
     await connectDatabase();
   } catch (error) {
@@ -27,6 +23,14 @@ async function start() {
     }
     logger.warn('Modo desenvolvimento: servidor continua sem banco.');
   }
+
+  app.listen(PORT, () => {
+    if (isProduction) {
+      logger.info(`Servidor rodando na porta ${PORT}`);
+    } else {
+      logger.info(`Servidor rodando em http://localhost:${PORT}`);
+    }
+  });
 }
 
 start();
