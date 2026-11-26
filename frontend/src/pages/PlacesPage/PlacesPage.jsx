@@ -2,7 +2,6 @@ import { useRef, useState } from "react";
 
 import PlaceCard from "../../components/PlaceCard/PlaceCard.jsx";
 import CTA from "../../components/CTA/CTA.jsx";
-import { PLACES_LIST } from "../../components/Places/data";
 import { filterPlaces } from "../../utils/filterPlaces";
 
 import {
@@ -16,17 +15,26 @@ import {
   PLACES_EMPTY_TITLE,
   PLACES_EMPTY_TEXT,
   PLACES_EMPTY_BUTTON_LABEL,
+  PLACES_LOADING_TEXT,
+  PLACES_ERROR_TEXT,
 } from "./data";
 
 import "./PlacesPage.css";
 
-function PlacesPage({ onCreateAccountClick, onSignInClick, onFavoriteClick }) {
+function PlacesPage({
+  places = [],
+  placesLoading = false,
+  placesError = false,
+  onCreateAccountClick,
+  onSignInClick,
+  onFavoriteClick,
+}) {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("Todos");
   const searchInputRef = useRef(null);
 
   const normalizedQuery = searchQuery.trim().toLowerCase();
-  const filteredPlaces = filterPlaces(PLACES_LIST, activeCategory, searchQuery);
+  const filteredPlaces = filterPlaces(places, activeCategory, searchQuery);
 
   const resultsLabel =
     filteredPlaces.length === 1
@@ -59,38 +67,20 @@ function PlacesPage({ onCreateAccountClick, onSignInClick, onFavoriteClick }) {
           <p className="catalog__subtitle">{PLACES_PAGE_SUBTITLE}</p>
         </header>
 
-        <div className="catalog__controls">
-          <div className="search-bar">
-            <svg
-              className="search-bar__icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              aria-hidden="true"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <line x1="21" y1="21" x2="16.65" y2="16.65" />
-            </svg>
-            <input
-              ref={searchInputRef}
-              type="text"
-              className="search-bar__input"
-              placeholder={PLACES_SEARCH_PLACEHOLDER}
-              aria-label={PLACES_SEARCH_ARIA_LABEL}
-              value={searchQuery}
-              onChange={handleSearchChange}
-            />
-            {searchQuery !== "" && (
-              <button
-                type="button"
-                className="search-bar__clear"
-                onClick={handleClearSearch}
-                aria-label={PLACES_CLEAR_SEARCH_LABEL}
-              >
+        {placesLoading && (
+          <p className="catalog__loading">{PLACES_LOADING_TEXT}</p>
+        )}
+
+        {!placesLoading && placesError && (
+          <p className="catalog__error">{PLACES_ERROR_TEXT}</p>
+        )}
+
+        {!placesLoading && !placesError && (
+          <>
+            <div className="catalog__controls">
+              <div className="search-bar">
                 <svg
-                  className="search-bar__clear-icon"
+                  className="search-bar__icon"
                   viewBox="0 0 24 24"
                   fill="none"
                   strokeWidth="2"
@@ -98,84 +88,114 @@ function PlacesPage({ onCreateAccountClick, onSignInClick, onFavoriteClick }) {
                   strokeLinejoin="round"
                   aria-hidden="true"
                 >
-                  <line x1="18" y1="6" x2="6" y2="18" />
-                  <line x1="6" y1="6" x2="18" y2="18" />
+                  <circle cx="11" cy="11" r="8" />
+                  <line x1="21" y1="21" x2="16.65" y2="16.65" />
                 </svg>
-              </button>
-            )}
-          </div>
-
-          <div className="filters">
-            <div className="filters__chips">
-              {PLACES_FILTER_CATEGORIES.map((category) => {
-                const isActive = activeCategory === category;
-                const chipClassName = isActive
-                  ? "filters__chip filters__chip--active"
-                  : "filters__chip";
-
-                return (
-                  <button
-                    key={category}
-                    type="button"
-                    className={chipClassName}
-                    aria-pressed={isActive}
-                    onClick={() => setActiveCategory(category)}
-                  >
-                    {category}
-                  </button>
-                );
-              })}
-            </div>
-
-            <p className="filters__count">{resultsLabel}</p>
-          </div>
-        </div>
-
-        {filteredPlaces.length === 0 ? (
-          <div className="empty-state">
-            <div className="empty-state__icon-wrap">
-              <svg
-                className="empty-state__icon"
-                viewBox="0 0 24 24"
-                fill="none"
-                strokeWidth="1.75"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                aria-hidden="true"
-              >
-                <circle cx="11" cy="11" r="8" />
-                <line x1="21" y1="21" x2="16.65" y2="16.65" />
-                <line x1="8" y1="11" x2="14" y2="11" />
-              </svg>
-            </div>
-            <h2 className="empty-state__title">{PLACES_EMPTY_TITLE}</h2>
-            <p className="empty-state__text">{PLACES_EMPTY_TEXT}</p>
-            {hasActiveFilters && (
-              <button
-                type="button"
-                className="empty-state__btn"
-                onClick={handleResetFilters}
-              >
-                {PLACES_EMPTY_BUTTON_LABEL}
-              </button>
-            )}
-          </div>
-        ) : (
-          <ul className="places__grid">
-            {filteredPlaces.map((place) => (
-              <li key={place.id} className="places__grid-item">
-                <PlaceCard
-                  image={place.image}
-                  alt={place.alt}
-                  tag={place.tag}
-                  location={place.location}
-                  title={place.title}
-                  description={place.description}
-                  onFavoriteClick={onFavoriteClick}
+                <input
+                  ref={searchInputRef}
+                  type="text"
+                  className="search-bar__input"
+                  placeholder={PLACES_SEARCH_PLACEHOLDER}
+                  aria-label={PLACES_SEARCH_ARIA_LABEL}
+                  value={searchQuery}
+                  onChange={handleSearchChange}
                 />
-              </li>
-            ))}
-          </ul>
+                {searchQuery !== "" && (
+                  <button
+                    type="button"
+                    className="search-bar__clear"
+                    onClick={handleClearSearch}
+                    aria-label={PLACES_CLEAR_SEARCH_LABEL}
+                  >
+                    <svg
+                      className="search-bar__clear-icon"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </button>
+                )}
+              </div>
+
+              <div className="filters">
+                <div className="filters__chips">
+                  {PLACES_FILTER_CATEGORIES.map((category) => {
+                    const isActive = activeCategory === category;
+                    const chipClassName = isActive
+                      ? "filters__chip filters__chip--active"
+                      : "filters__chip";
+
+                    return (
+                      <button
+                        key={category}
+                        type="button"
+                        className={chipClassName}
+                        aria-pressed={isActive}
+                        onClick={() => setActiveCategory(category)}
+                      >
+                        {category}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                <p className="filters__count">{resultsLabel}</p>
+              </div>
+            </div>
+
+            {filteredPlaces.length === 0 ? (
+              <div className="empty-state">
+                <div className="empty-state__icon-wrap">
+                  <svg
+                    className="empty-state__icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    strokeWidth="1.75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                    <line x1="8" y1="11" x2="14" y2="11" />
+                  </svg>
+                </div>
+                <h2 className="empty-state__title">{PLACES_EMPTY_TITLE}</h2>
+                <p className="empty-state__text">{PLACES_EMPTY_TEXT}</p>
+                {hasActiveFilters && (
+                  <button
+                    type="button"
+                    className="empty-state__btn"
+                    onClick={handleResetFilters}
+                  >
+                    {PLACES_EMPTY_BUTTON_LABEL}
+                  </button>
+                )}
+              </div>
+            ) : (
+              <ul className="places__grid">
+                {filteredPlaces.map((place) => (
+                  <li key={place._id} className="places__grid-item">
+                    <PlaceCard
+                      image={place.image}
+                      alt={place.alt}
+                      tag={place.tag}
+                      location={place.location}
+                      title={place.title}
+                      description={place.description}
+                      onFavoriteClick={onFavoriteClick}
+                    />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </>
         )}
       </section>
 

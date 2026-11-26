@@ -8,12 +8,11 @@ import {
   PLACES_SUBTITLE,
   PLACES_VIEW_ALL_LABEL,
   PLACES_VIEW_ALL_TO,
-  PLACES_LIST,
 } from "./data";
 
 import "./Places.css";
 
-function Places({ onFavoriteClick }) {
+function Places({ places = [], onFavoriteClick }) {
   return (
     <section id="lugares" className="places" aria-labelledby="places-title">
       <div className="places__inner container">
@@ -44,8 +43,8 @@ function Places({ onFavoriteClick }) {
         </div>
 
         <ul className="places__grid">
-          {PLACES_LIST.map((place) => (
-            <li key={place.id} className="places__grid-item">
+          {places.map((place) => (
+            <li key={place._id} className="places__grid-item">
               <PlaceCard
                 image={place.image}
                 alt={place.alt}

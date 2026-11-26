@@ -3,6 +3,7 @@ import { Switch, Route, useHistory, useLocation } from "react-router-dom";
 
 import { fetchWeather } from "./services/weatherApi";
 import { signUp, signIn, getCurrentUser } from "./services/authApi";
+import { getPlaces } from "./services/placesApi";
 import CurrentUserContext from "./contexts/CurrentUserContext";
 import Header from "./components/Header/Header.jsx";
 import Footer from "./components/Footer/Footer.jsx";
@@ -31,6 +32,10 @@ function App() {
   const [authMode, setAuthMode] = useState("signup");
   const [authMessage, setAuthMessage] = useState("");
   const [apiError, setApiError] = useState("");
+
+  const [places, setPlaces] = useState([]);
+  const [placesLoading, setPlacesLoading] = useState(true);
+  const [placesError, setPlacesError] = useState(false);
 
   const [weatherData, setWeatherData] = useState(null);
   const [weatherLoading, setWeatherLoading] = useState(true);
@@ -76,6 +81,29 @@ function App() {
         if (!isNetworkIssue) {
           localStorage.removeItem("jwt");
         }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    getPlaces()
+      .then((data) => {
+        if (!isMounted) return;
+        setPlaces(data);
+        setPlacesError(false);
+      })
+      .catch(() => {
+        if (!isMounted) return;
+        setPlacesError(true);
+      })
+      .finally(() => {
+        if (!isMounted) return;
+        setPlacesLoading(false);
       });
 
     return () => {
@@ -194,6 +222,7 @@ function App() {
                   onCreateAccountClick={() => handleOpenAuthPopup("signup")}
                   onSignInClick={() => handleOpenAuthPopup("signin")}
                   onFavoriteClick={handleFavoriteClick}
+                  places={places}
                   weatherData={weatherData}
                   weatherLoading={weatherLoading}
                   weatherError={weatherError}
@@ -208,6 +237,9 @@ function App() {
             render={() => (
               <>
                 <PlacesPage
+                  places={places}
+                  placesLoading={placesLoading}
+                  placesError={placesError}
                   onCreateAccountClick={() => handleOpenAuthPopup("signup")}
                   onSignInClick={() => handleOpenAuthPopup("signin")}
                   onFavoriteClick={handleFavoriteClick}

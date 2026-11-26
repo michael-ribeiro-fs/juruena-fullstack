@@ -8,6 +8,7 @@ function MainPage({
   onCreateAccountClick,
   onSignInClick,
   onFavoriteClick,
+  places,
   weatherData,
   weatherLoading,
   weatherError,
@@ -21,7 +22,7 @@ function MainPage({
         hasError={weatherError}
       />
       <About />
-      <Places onFavoriteClick={onFavoriteClick} />
+      <Places places={places} onFavoriteClick={onFavoriteClick} />
       <CTA
         onCreateAccountClick={onCreateAccountClick}
         onSignInClick={onSignInClick}

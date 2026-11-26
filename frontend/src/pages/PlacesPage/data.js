@@ -19,3 +19,7 @@ export const PLACES_CLEAR_SEARCH_LABEL = 'Limpar busca';
 export const PLACES_EMPTY_TITLE = 'Nenhum lugar encontrado';
 export const PLACES_EMPTY_TEXT = 'Tente outra busca ou remova os filtros aplicados.';
 export const PLACES_EMPTY_BUTTON_LABEL = 'Limpar filtros';
+
+export const PLACES_LOADING_TEXT = 'Carregando lugares...';
+
+export const PLACES_ERROR_TEXT = 'Não foi possível carregar os lugares. Tente novamente mais tarde.';
