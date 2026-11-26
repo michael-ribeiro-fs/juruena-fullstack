@@ -1,13 +1,6 @@
-const API_BASE = import.meta.env.VITE_API_URL || '/api';
+import handleResponse from './handleResponse';
 
-function handleResponse(res) {
-  if (!res.ok) {
-    return res.json().then((data) => {
-      throw new Error(data.message || `Erro ${res.status}`);
-    });
-  }
-  return res.json();
-}
+const API_BASE = import.meta.env.VITE_API_URL || '/api';
 
 export function signUp({ name, email, password }) {
   return fetch(`${API_BASE}/signup`, {
