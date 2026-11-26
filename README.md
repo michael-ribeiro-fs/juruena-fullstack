@@ -1,44 +1,49 @@
 # Juruena - Guia Regional e Cultural
 
-Guia digital de lugares, cultura e sabores de Juruena, Mato Grosso.
+Guia digital de lugares, cultura e sabores de Juruena, Mato Grosso. Projeto full-stack final do bootcamp de Desenvolvimento Full-Stack da TripleTen (Sprint 19).
 
-> **Status:** Etapa 1 - Frontend concluída. Backend e integração full-stack nas próximas entregas.
-
-**Deploy:** https://michael-ribeiro-fs.github.io/juruena-fullstack/
+**Deploy:** https://juruena-fullstack.vercel.app/
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite&logoColor=white)
 ![React Router](https://img.shields.io/badge/React_Router-5-CA4245?logo=reactrouter&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-20-339933?logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express-4-000000?logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-HS256-black?logo=jsonwebtokens&logoColor=white)
 ![Vitest](https://img.shields.io/badge/Vitest-32_tests-6E9F18?logo=vitest&logoColor=white)
+![Jest](https://img.shields.io/badge/Jest-111_tests-C21325?logo=jest&logoColor=white)
 ![ESLint](https://img.shields.io/badge/ESLint-Airbnb-4B32C3?logo=eslint&logoColor=white)
 
 ---
 
 ## Problema
 
-Juruena é um município do noroeste de Mato Grosso, marcado por sua relação com a natureza e a diversidade da região amazônica. Apesar de ser um destino rico em ecossistemas, cultura ribeirinha e tradições sustentáveis (como a colheita da castanha-do-brasil), **não existe uma plataforma digital centralizada** que reúna informações sobre lugares, história e dados práticos da cidade.
+Juruena é um município do noroeste de Mato Grosso, marcado por sua relação com a natureza e pela diversidade da região amazônica. Apesar de ser um destino rico em ecossistemas, cultura ribeirinha e tradições sustentáveis (como a colheita da castanha-do-brasil), **não existe uma plataforma digital centralizada** que reúna informações sobre lugares, história e dados práticos da cidade.
 
 Turistas e moradores enfrentam:
 
 - Falta de informação consolidada sobre pontos turísticos
 - Ausência de dados climáticos em tempo real
 - Nenhum canal digital para colaboração comunitária (sugestão de lugares)
+- Nenhum mecanismo para salvar lugares de interesse e revisitá-los
 
 ---
 
 ## Solução
 
-O **Juruena - Guia Regional e Cultural** é uma SPA (Single Page Application) construída com React + Vite que oferece:
+O **Juruena - Guia Regional e Cultural** é uma aplicação full-stack que une **React (frontend)** e **Node.js + Express + MongoDB (backend)** para oferecer:
 
 - **Landing page** com hero, seção sobre a cidade, clima em tempo real e prévia do catálogo
 - **Catálogo completo de lugares** (`/lugares`) com busca textual, filtros por categoria e empty state
-- **Página de favoritos** (`/favoritos`) protegida por rota, com estrutura pronta para autenticação
+- **Favoritos** (`/favoritos`) com persistência real por usuário autenticado
 - **Clima em tempo real** via [Open-Meteo API](https://open-meteo.com/) (pública, sem autenticação)
 - **Modal de detalhes** (lightbox) ao clicar em um lugar
-- **Popup de autenticação** com validação client-side inline
-- **Banner de cookies** em conformidade com a LGPD, com persistência em `localStorage`
-- **Design responsivo mobile-first**, com design system em tokens CSS
-- **32 testes automatizados** cobrindo funções puras, services e contratos de dados
+- **Autenticação real** com JWT (cadastro, login, logout e sessão persistida)
+- **Painel administrativo** (`/admin`) protegido por role, com cadastro e exclusão de lugares
+- **Banner de cookies** em conformidade com a LGPD, com consentimento persistido em `localStorage`
+- **Design responsivo mobile-first**, com design system baseado em tokens CSS
+- **Testes automatizados:** 32 no frontend (Vitest) e 111 no backend (Jest + SuperTest)
 
 ### Screenshots
 
@@ -62,6 +67,18 @@ O **Juruena - Guia Regional e Cultural** é uma SPA (Single Page Application) co
 
 ## Arquitetura
 
+Monorepo com duas aplicações independentes, `frontend/` e `backend/`. Cada uma possui seu próprio `package.json`, testes, lint e deploy.
+
+```text
+juruena-fullstack/
+├── frontend/           # React + Vite
+├── backend/            # Node.js + Express + MongoDB
+├── README.md
+└── .gitignore
+```
+
+### Frontend
+
 Estrutura organizada por responsabilidade, sem misturar camadas:
 
 ```text
@@ -73,24 +90,29 @@ frontend/
 │   │   ├── About/           # Seção "Sobre a Cidade"
 │   │   ├── AuthPopup/       # Popup de login/cadastro
 │   │   ├── CookieBanner/    # Banner LGPD
-│   │   ├── CTA/             # Call-to-action final
+│   │   ├── CTA/             # Call-to-action
 │   │   ├── Footer/          # Rodapé
 │   │   ├── Header/          # Cabeçalho com variant + hamburguer mobile
 │   │   ├── Hero/            # Hero da home
 │   │   ├── PlaceCard/       # Card de lugar (favoritar + modal)
-│   │   ├── PlaceModal/      # Modal lightbox de detalhes
+│   │   ├── PlaceModal/      # Modal lightbox
+│   │   ├── PlaceForm/       # Formulário de cadastro (admin)
 │   │   ├── Places/          # Seção de lugares da home
-│   │   ├── ProtectedRoute/  # HOC de rota protegida
+│   │   ├── ProtectedRoute/  # HOC de rota protegida (+ role)
 │   │   └── Weather/         # Clima (recebe dados via props)
 │   ├── contexts/            # CurrentUserContext
-│   ├── hooks/               # Reservado para hooks customizados
 │   ├── pages/               # Páginas roteadas
 │   │   ├── MainPage/        # Home
 │   │   ├── PlacesPage/      # Catálogo
 │   │   ├── FavoritesPage/   # Favoritos (protegida)
+│   │   ├── AdminPage/       # Painel admin (role admin)
 │   │   └── NotFoundPage/    # 404
 │   ├── services/            # Integrações com API
-│   │   └── weatherApi.js    # Open-Meteo
+│   │   ├── authApi.js       # signup, signin, getCurrentUser
+│   │   ├── placesApi.js     # get, create, delete
+│   │   ├── favoritesApi.js  # get, add, remove
+│   │   ├── weatherApi.js    # Open-Meteo
+│   │   └── handleResponse.js
 │   ├── styles/              # Design system
 │   │   ├── tokens.css       # Variáveis (cores, fontes, espaçamentos)
 │   │   ├── global.css       # Reset + base
@@ -111,32 +133,70 @@ frontend/
 
 **Princípios aplicados:**
 
-- **Cada componente tem 3 arquivos:** `Componente.jsx`, `Componente.css` e `data.js`
+- **Três arquivos por componente:** `Componente.jsx`, `Componente.css` e `data.js`
 - **Dados estáticos em `data.js`:** zero conteúdo hardcoded no JSX
 - **Design system em `tokens.css`:** alterar `--color-primary` reflete em todo o projeto
-- **App como orquestrador:** fetch, rotas e estado global ficam centralizados no `App`
+- **`App` como orquestrador:** fetch, rotas e estado global ficam centralizados
 - **Componentes presentational:** `Weather` recebe dados via props e não faz fetch
-- **Testes colocados:** cada `.test.js` fica ao lado do arquivo testado
+
+### Backend
+
+API REST em Node.js + Express + MongoDB, seguindo o padrão TripleTen (CommonJS, controller enxuto, Model direto).
+
+```text
+backend/
+├── src/
+│   ├── app.js               # Express app (sem listen)
+│   ├── server.js            # Conecta ao banco + listen
+│   ├── config/              # env, constants, database
+│   ├── models/              # User, Place, Favorite
+│   ├── controllers/         # auth, user, place, favorite
+│   ├── routes/              # authRoutes, userRoutes, placeRoutes, favoriteRoutes
+│   ├── middlewares/         # auth, checkAdmin, validate, errorHandler, etc.
+│   ├── validators/          # Schemas Joi
+│   ├── errors/              # AppError + classes filhas
+│   ├── utils/               # hash, jwt
+│   └── logger/              # Winston
+├── tests/
+│   ├── unit/                # 63 testes
+│   └── integration/         # 48 testes
+├── scripts/                 # seedPlaces.js
+├── DOC.md                   # Documentação técnica completa
+├── dummies.md               # Explicação simplificada do backend
+└── package.json
+```
+
+**Documentação do backend:**
+
+- [`backend/DOC.md`](./backend/DOC.md): referência técnica completa (arquitetura, endpoints, schemas, testes e decisões)
+- [`backend/dummies.md`](./backend/dummies.md): explicação acessível para qualquer pessoa (frontend, QA, novos membros do time), sem jargão
 
 ---
 
 ## Decisões Técnicas
 
-| Decisão                        | Justificativa                                                                              |
-| ------------------------------ | ------------------------------------------------------------------------------------------ |
-| **React 19 + Vite**            | Stack exigida pelo curso; Vite oferece HMR rápido e build otimizado                        |
-| **React Router v5**            | Requisito do checklist (`<Switch>`, `<Route>`, `<Redirect>`, `useHistory()`), em vez da v6 |
-| **BEM + `className`**          | Nomenclatura CSS consistente e sem conflitos                                               |
-| **Design tokens CSS**          | Paleta inteira alterável em um único arquivo (`tokens.css`), sem refactor                  |
-| **Mobile-first**               | Media queries com `min-width`; sem scroll horizontal a partir de 320px                     |
-| **Fontes self-hosted (woff2)** | Melhor performance (sem request externo) e sem dependência do Google Fonts                 |
-| **Open-Meteo API**             | Pública, gratuita e sem chave de API; nenhuma conta necessária                             |
-| **Vitest**                     | Integração nativa com Vite (sintaxe compatível com Jest, sem Babel)                        |
-| **32 testes unitários**        | Cobrem funções puras, services (mock de `fetch`) e contratos de constantes                 |
-| **Validação client-side**      | Erro inline em tempo real + `aria-invalid` para acessibilidade                             |
-| **Banner de cookies (LGPD)**   | Aceitar/Recusar persiste em `localStorage`; o Google Analytics só roda com consentimento   |
-| **ProtectedRoute (HOC)**       | Estrutura pronta para autenticação real (Etapa 3); hoje redireciona usuários deslogados    |
-| **`eslint-disable` proibido**  | Conforme o checklist; exceções são configuradas em `.eslintrc.json`                        |
+| Decisão                                            | Justificativa                                                                                                   |
+| -------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| **Monorepo com `frontend/` + `backend/`**          | Cada parte tem seu `package.json`, testes e deploy independentes; estrutura simples, sem workspaces             |
+| **React 19 + Vite**                                | Stack exigida pelo curso; Vite oferece HMR rápido e build otimizado                                             |
+| **React Router v5**                                | Requisito do checklist (`<Switch>`, `<Route>`, `<Redirect>`, `useHistory()`)                                    |
+| **Design tokens CSS**                              | Paleta inteira alterável em um único arquivo (`tokens.css`), sem refactor                                       |
+| **BEM + `className`**                              | Nomenclatura CSS consistente, sem conflitos                                                                     |
+| **Mobile-first**                                   | Media queries com `min-width`; sem scroll horizontal a partir de 320px                                          |
+| **Fontes self-hosted (woff2)**                     | Performance (sem request externo) e independência de provedor                                                   |
+| **Vitest (frontend)**                              | Integração nativa com Vite; sintaxe compatível com Jest, sem Babel                                              |
+| **Node.js 20 + Express 4 + MongoDB**               | Stack backend padrão do curso; deploy simples e gratuito (Render + Atlas)                                       |
+| **CommonJS (`require`/`module.exports`)**          | Padrão TripleTen; Jest roda nativamente sem Babel                                                               |
+| **Jest + SuperTest (backend)**                     | 111 testes (unit + integration) com 97% de cobertura                                                            |
+| **Sem `services/` nem `repositories/` no backend** | Controller → Model direto é suficiente para o escopo (3 models, 10 endpoints), sem over-engineering             |
+| **JWT com `role` (user/admin)**                    | Autorização em duas camadas: `auth` (autenticado) + `checkAdmin` (administrador)                                |
+| **Validação em módulo separado (Joi + Celebrate)** | Roda antes do controller; erros padronizados                                                                    |
+| **Erros tipados (`AppError` + 5 filhas)**          | `errorHandler` central responde sem `if` espalhados                                                             |
+| **`select: false` em `password`**                  | Hash nunca retorna em respostas (defesa em profundidade)                                                        |
+| **Rate limit + Helmet + CORS**                     | Hardening: proteção contra brute-force, headers seguros e origens explícitas                                    |
+| **Banner de cookies (LGPD)**                       | Aceitar/Recusar persiste em `localStorage`, preparando a integração com analytics condicionada ao consentimento |
+| **`ProtectedRoute` (HOC) com `requiredRole`**      | `/favoritos` exige login; `/admin` exige `role === 'admin'`                                                     |
+| **`eslint-disable` proibido**                      | Conforme checklist; exceções apenas via `.eslintrc.json`                                                        |
 
 ---
 
@@ -144,55 +204,156 @@ frontend/
 
 ### Pré-requisitos
 
-- Node.js 18+ (recomendado 20+)
+- Node.js 20+ (recomendado 20.18 LTS)
 - npm 9+
+- MongoDB Atlas (cluster M0 gratuito) ou MongoDB local
 
-### Instalação
+### 1. Clonar o repositório
 
 ```bash
-# Clone o repositório
 git clone https://github.com/michael-ribeiro-fs/juruena-fullstack.git
-cd juruena-fullstack/frontend
-
-# Instale as dependências
-npm install
+cd juruena-fullstack
 ```
 
-### Desenvolvimento
+### 2. Backend
+
+```bash
+cd backend
+npm install
+cp .env.example .env
+```
+
+Edite `backend/.env`:
+
+```env
+PORT=3000
+NODE_ENV=development
+MONGO_URI=mongodb://127.0.0.1:27017/juruena-dev
+MONGO_URI_TEST=mongodb://127.0.0.1:27017/juruena-test
+JWT_SECRET=dev-secret
+JWT_EXPIRES_IN=7d
+CORS_ORIGINS=http://localhost:5173
+LOG_DIR=./logs
+```
+
+> Para usar o Atlas em vez do MongoDB local, substitua as URIs pelas connection strings do seu cluster.
+
+Popule o catálogo inicial (opcional, mas recomendado):
+
+```bash
+node scripts/seedPlaces.js
+```
+
+Suba o servidor:
 
 ```bash
 npm run dev
-# Abra http://localhost:3000
+# → http://localhost:3000
 ```
+
+### 3. Frontend
+
+Em **outro terminal**:
+
+```bash
+cd frontend
+npm install
+npm run dev
+# → http://localhost:5173
+```
+
+O frontend chama `/api/*`, que é redirecionado pelo **proxy do Vite** para `http://localhost:3000` (configurado em `vite.config.js`). Nenhuma variável de ambiente adicional é necessária em desenvolvimento.
 
 ### Testes
 
 ```bash
-npm test             # Roda os 32 testes uma vez
-npm run test:watch   # Modo watch (útil durante o desenvolvimento)
+# Frontend (Vitest) - 32 testes
+cd frontend
+npm test
+npm run test:watch
+
+# Backend (Jest) - 111 testes
+cd backend
+npm test
+npm run test:coverage
 ```
 
 ### Lint
 
 ```bash
-npm run lint             # Verifica erros de ESLint
-npm run lint -- --fix    # Corrige automaticamente
+cd frontend && npm run lint
+cd backend && npm run lint
 ```
 
 ### Build de produção
 
 ```bash
-npm run build     # Gera a pasta dist/
-npm run preview   # Preview local do build
+# Frontend
+cd frontend
+npm run build      # gera dist/
+npm run preview    # preview local
+
+# Backend
+cd backend
+npm start          # node src/server.js
 ```
+
+### Como se tornar administrador
+
+O painel `/admin` exige `role === 'admin'`. A promoção é feita **manualmente no MongoDB**:
+
+```js
+db.users.updateOne({ email: "seu@email.com" }, { $set: { role: "admin" } });
+```
+
+Após alterar, **faça logout e login novamente** (o JWT antigo contém a role anterior).
+
+### Deploy
+
+| Camada         | Plataforma         | URL                                   |
+| -------------- | ------------------ | ------------------------------------- |
+| Frontend       | Vercel             | https://juruena-fullstack.vercel.app/ |
+| Backend        | Render             | https://juruena-backend.onrender.com  |
+| Banco de dados | MongoDB Atlas (M0) | `juruena-prod`                        |
+
+**Variáveis de ambiente em produção**
+
+| Serviço | Variável       | Valor                                             |
+| ------- | -------------- | ------------------------------------------------- |
+| Vercel  | `VITE_API_URL` | `https://juruena-backend.onrender.com/api`        |
+| Render  | `NODE_ENV`     | `production`                                      |
+| Render  | `MONGO_URI`    | Connection string do Atlas (`juruena-prod`)       |
+| Render  | `JWT_SECRET`   | Chave de 256 bits gerada com `crypto.randomBytes` |
+| Render  | `CORS_ORIGINS` | `https://juruena-fullstack.vercel.app`            |
+
+> **Nota:** no plano gratuito do Render, o backend hiberna após 15 minutos de inatividade. O primeiro acesso depois disso pode levar de 30 a 60 segundos.
 
 ---
 
 ## Endpoints
 
-Nesta etapa o frontend consome apenas uma API externa (Open-Meteo) via `fetch`, com as requisições centralizadas em `src/services/weatherApi.js`.
+### API REST (`/api`)
 
-### Open-Meteo Forecast API
+Autenticação em duas camadas: `auth` (JWT válido) + `checkAdmin` (role admin). Formato de erro padronizado: `{ "message": "string" }`.
+
+| Método   | Rota                      | Auth | Role      | Descrição                   |
+| -------- | ------------------------- | ---- | --------- | --------------------------- |
+| `GET`    | `/api/health`             | -    | -         | Health check                |
+| `POST`   | `/api/signup`             | -    | -         | Cadastro de usuário         |
+| `POST`   | `/api/signin`             | -    | -         | Login (retorna JWT)         |
+| `GET`    | `/api/users/me`           | ✅   | user      | Perfil do usuário logado    |
+| `GET`    | `/api/places`             | -    | -         | Catálogo público de lugares |
+| `POST`   | `/api/places`             | ✅   | **admin** | Cadastrar lugar             |
+| `DELETE` | `/api/places/:placeId`    | ✅   | **admin** | Excluir lugar               |
+| `GET`    | `/api/favorites`          | ✅   | user      | Favoritos do usuário logado |
+| `POST`   | `/api/favorites/:placeId` | ✅   | user      | Favoritar lugar             |
+| `DELETE` | `/api/favorites/:placeId` | ✅   | user      | Desfavoritar lugar          |
+
+Referência técnica completa: [`backend/DOC.md`](./backend/DOC.md)
+
+### API externa (Open-Meteo)
+
+O componente `Weather` consome a **Open-Meteo Forecast API** (pública, sem autenticação), com requisições centralizadas em `frontend/src/services/weatherApi.js`:
 
 ```text
 GET https://api.open-meteo.com/v1/forecast
@@ -204,63 +365,42 @@ GET https://api.open-meteo.com/v1/forecast
 | `longitude`     | `-58.359`                                            | Coordenada de Juruena - MT |
 | `current`       | `temperature_2m,apparent_temperature,weather_code`   | Dados atuais               |
 | `daily`         | `weather_code,temperature_2m_max,temperature_2m_min` | Previsão diária            |
-| `timezone`      | `auto`                                               | Fuso horário automático    |
+| `timezone`      | `auto`                                               | Fuso automático            |
 | `forecast_days` | `4`                                                  | Hoje + 3 dias              |
 
-- **Autenticação:** nenhuma (API pública)
-- **Rate limit:** 600 requisições/minuto por IP
+- **Autenticação:** nenhuma
+- **Rate limit:** 600 req/min por IP
 - **Documentação oficial:** [open-meteo.com/en/docs](https://open-meteo.com/en/docs)
 
-**Código consumidor:**
+### Rotas do frontend (React Router v5)
 
-- `src/services/weatherApi.js` → `fetchWeather()`
-- `src/App.jsx` → `useEffect` que chama `fetchWeather()`
-- `src/components/Weather/Weather.jsx` → exibe os dados recebidos via props
-
-### Rotas internas (React Router v5)
-
-| Rota         | Componente                             | Protegida? |
-| ------------ | -------------------------------------- | ---------- |
-| `/`          | `MainPage`                             | Não        |
-| `/lugares`   | `PlacesPage`                           | Não        |
-| `/favoritos` | `FavoritesPage` (via `ProtectedRoute`) | Sim        |
-| `*`          | `NotFoundPage`                         | —          |
+| Rota         | Componente      | Protegida? | Restrição           |
+| ------------ | --------------- | ---------- | ------------------- |
+| `/`          | `MainPage`      | Não        | -                   |
+| `/lugares`   | `PlacesPage`    | Não        | -                   |
+| `/favoritos` | `FavoritesPage` | ✅         | Usuário autenticado |
+| `/admin`     | `AdminPage`     | ✅         | `role === 'admin'`  |
+| `*`          | `NotFoundPage`  | -          | -                   |
 
 ---
 
 ## Próximos Passos
 
-Este projeto está na **Etapa 1 (Frontend)** do bootcamp. As próximas etapas planejadas são:
+O projeto está funcional no escopo das três fases do bootcamp (frontend, backend e integração). Evoluções planejadas:
 
-### Etapa 2 — Backend (Node / Express / MongoDB)
-
-- API REST com `POST /signup`, `POST /signin` e `GET /users/me`
-- Autenticação JWT com hash de senha via bcrypt
-- CRUD de favoritos (`GET /places`, `POST /favorites`, `DELETE /favorites/:id`)
-- Validação com Celebrate/Joi, logs com Winston e rate limit com Express Rate Limit
-- Deploy em Render ou Railway
-
-### Etapa 3 — Integração Full-Stack
-
-- `services/authApi.js` com `signUp`, `signIn` e `getCurrentUser`
-- `CurrentUserContext.Provider` populado via `/users/me`
-- Botão de favoritar com persistência real (`POST`/`DELETE`)
-- Popup de autenticação com `fetch` real (em vez de `console.log`)
-- `ProtectedRoute` funcionando com autenticação real
-
-### Melhorias contínuas
-
-- [ ] Substituir as imagens externas (URLs do Google) por imagens locais
-- [ ] Integrar o Google Analytics ao consentimento do banner de cookies
-- [ ] Criar a página `/privacidade` com a política de cookies completa
-- [ ] Adicionar o botão "Gerenciar cookies" no Footer (permitir revogar consentimento)
-- [ ] Testes E2E com Playwright (fora do escopo do curso)
+- [ ] Google Analytics integrado ao consentimento do banner de cookies (LGPD)
+- [ ] Página `/privacidade` com política de cookies completa
+- [ ] Botão "Gerenciar cookies" no Footer (permitir revogar consentimento)
+- [ ] Upload real de imagens no painel admin (atualmente por URL externa)
+- [ ] Migração das imagens externas para armazenamento próprio (Cloudinary, S3 ou similar)
+- [ ] Testes E2E com Playwright
 - [ ] PWA (offline-first e instalável)
+- [ ] Domínio customizado para frontend e backend
 
 ---
 
 ## Licença
 
-2026 Michael Ribeiro
+MIT © 2026 Michael Ribeiro
 
 Este projeto foi desenvolvido como parte do projeto final do bootcamp de Desenvolvimento Full-Stack da TripleTen (Sprint 19).

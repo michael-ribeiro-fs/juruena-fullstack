@@ -67,6 +67,21 @@
   }
 }
 
+.catalog__loading,
+.catalog__error {
+  padding: var(--space-xl) 0;
+  font-size: var(--font-size-sm-plus);
+  text-align: center;
+}
+
+.catalog__loading {
+  color: var(--color-text-muted);
+}
+
+.catalog__error {
+  color: var(--color-accent);
+}
+
 /* ---------- Controles ---------- */
 
 .catalog__controls {

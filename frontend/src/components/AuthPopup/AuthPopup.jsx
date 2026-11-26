@@ -50,6 +50,7 @@ function AuthPopup({
   onSubmitSignUp,
   onSubmitSignIn,
   message = "",
+  apiError = "",
 }) {
   const [formValues, setFormValues] = useState({
     name: "",
@@ -280,6 +281,12 @@ function AuthPopup({
               <span id="auth-password-error">{renderError("password")}</span>
             )}
           </div>
+
+          {apiError && (
+            <p className="modal__api-error" role="alert">
+              {apiError}
+            </p>
+          )}
 
           <button type="submit" className="modal__submit">
             {content.submitLabel}

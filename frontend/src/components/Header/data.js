@@ -14,5 +14,7 @@ export const HEADER_NAV_LINKS = [
 export const HEADER_SIGN_IN_LABEL = 'Entrar';
 export const HEADER_SIGN_OUT_LABEL = 'Sair';
 
+export const HEADER_ADMIN_LINK = { id: 'admin', label: 'Admin', to: '/admin' };
+
 export const HEADER_MENU_OPEN_LABEL = 'Abrir menu de navegação';
 export const HEADER_MENU_CLOSE_LABEL = 'Fechar menu de navegação';

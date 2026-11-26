@@ -80,6 +80,16 @@
   font-weight: var(--font-weight-medium);
 }
 
+.modal__api-error {
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-md);
+  background-color: var(--color-accent-soft);
+  border-left: 3px solid var(--color-accent);
+  font-size: var(--font-size-sm);
+  color: var(--color-accent);
+  font-weight: var(--font-weight-medium);
+}
+
 /* ---------- Form ---------- */
 
 .modal__form {
