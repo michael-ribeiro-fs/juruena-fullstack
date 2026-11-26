@@ -2,10 +2,16 @@ import { useEffect, useState } from "react";
 import { Switch, Route, useHistory, useLocation } from "react-router-dom";
 
 import { fetchWeather } from "./services/weatherApi";
+import { signUp, signIn, getCurrentUser } from "./services/authApi";
+import CurrentUserContext from "./contexts/CurrentUserContext";
 import Header from "./components/Header/Header.jsx";
 import Footer from "./components/Footer/Footer.jsx";
 import AuthPopup from "./components/AuthPopup/AuthPopup.jsx";
-import { AUTH_PROTECTED_ROUTE_MESSAGE } from "./components/AuthPopup/data";
+import {
+  AUTH_PROTECTED_ROUTE_MESSAGE,
+  AUTH_SIGNUP_SUCCESS_MESSAGE,
+  AUTH_API_ERROR_MESSAGES,
+} from "./components/AuthPopup/data";
 import CookieBanner from "./components/CookieBanner/CookieBanner.jsx";
 
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute.jsx";
@@ -19,9 +25,12 @@ function App() {
   const history = useHistory();
   const { pathname, hash, state: locationState } = useLocation();
 
+  const [currentUser, setCurrentUser] = useState(null);
+
   const [isAuthPopupOpen, setIsAuthPopupOpen] = useState(false);
   const [authMode, setAuthMode] = useState("signup");
   const [authMessage, setAuthMessage] = useState("");
+  const [apiError, setApiError] = useState("");
 
   const [weatherData, setWeatherData] = useState(null);
   const [weatherLoading, setWeatherLoading] = useState(true);
@@ -52,6 +61,29 @@ function App() {
   }, [locationState, history]);
 
   useEffect(() => {
+    const token = localStorage.getItem("jwt");
+    if (!token) return undefined;
+
+    let isMounted = true;
+    getCurrentUser(token)
+      .then((user) => {
+        if (!isMounted) return;
+        setCurrentUser(user);
+      })
+      .catch((error) => {
+        if (!isMounted) return;
+        const isNetworkIssue = error.message.includes("Failed to fetch");
+        if (!isNetworkIssue) {
+          localStorage.removeItem("jwt");
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  useEffect(() => {
     let isMounted = true;
 
     fetchWeather()
@@ -79,103 +111,141 @@ function App() {
   const handleOpenAuthPopup = (initialMode) => {
     setAuthMode(initialMode);
     setAuthMessage("");
+    setApiError("");
     setIsAuthPopupOpen(true);
   };
 
   const handleCloseAuthPopup = () => {
     setIsAuthPopupOpen(false);
     setAuthMessage("");
+    setApiError("");
   };
 
   const handleSwitchAuthMode = () => {
     setAuthMode((previous) => (previous === "signup" ? "signin" : "signup"));
+    setApiError("");
   };
 
-  const handleSubmitSignUp = (formValues) => {
-    console.log("Signup:", formValues);
+  const buildApiErrorMessage = (error) => {
+    if (error.message.includes("Failed to fetch")) {
+      return AUTH_API_ERROR_MESSAGES.NETWORK_ERROR;
+    }
+    return error.message;
   };
 
-  const handleSubmitSignIn = (formValues) => {
-    console.log("Signin:", formValues);
+  const handleSubmitSignUp = ({ name, email, password }) => {
+    setApiError("");
+    signUp({ name, email, password })
+      .then(() => {
+        setAuthMessage(AUTH_SIGNUP_SUCCESS_MESSAGE);
+        setAuthMode("signin");
+      })
+      .catch((error) => {
+        setApiError(buildApiErrorMessage(error));
+      });
+  };
+
+  const handleSubmitSignIn = ({ email, password }) => {
+    setApiError("");
+    signIn({ email, password })
+      .then((data) => {
+        localStorage.setItem("jwt", data.token);
+        return getCurrentUser(data.token);
+      })
+      .then((user) => {
+        setCurrentUser(user);
+        handleCloseAuthPopup();
+      })
+      .catch((error) => {
+        localStorage.removeItem("jwt");
+        setCurrentUser(null);
+        setApiError(buildApiErrorMessage(error));
+      });
   };
 
   const handleSignOut = () => {
     localStorage.removeItem("jwt");
+    setCurrentUser(null);
     history.push("/");
   };
 
   const handleFavoriteClick = () => {
-    handleOpenAuthPopup("signin");
+    if (!currentUser) {
+      handleOpenAuthPopup("signin");
+    }
   };
 
   return (
-    <div className="app">
-      <Header
-        variant={headerVariant}
-        onSignInClick={() => handleOpenAuthPopup("signin")}
-        onSignOut={handleSignOut}
-      />
+    <CurrentUserContext.Provider value={currentUser}>
+      <div className="app">
+        <Header
+          variant={headerVariant}
+          onSignInClick={() => handleOpenAuthPopup("signin")}
+          onSignOut={handleSignOut}
+        />
 
-      <Switch>
-        <Route
-          exact
-          path="/"
-          render={() => (
+        <Switch>
+          <Route
+            exact
+            path="/"
+            render={() => (
+              <>
+                <MainPage
+                  onCreateAccountClick={() => handleOpenAuthPopup("signup")}
+                  onSignInClick={() => handleOpenAuthPopup("signin")}
+                  onFavoriteClick={handleFavoriteClick}
+                  weatherData={weatherData}
+                  weatherLoading={weatherLoading}
+                  weatherError={weatherError}
+                />
+                <Footer />
+              </>
+            )}
+          />
+
+          <Route
+            path="/lugares"
+            render={() => (
+              <>
+                <PlacesPage
+                  onCreateAccountClick={() => handleOpenAuthPopup("signup")}
+                  onSignInClick={() => handleOpenAuthPopup("signin")}
+                  onFavoriteClick={handleFavoriteClick}
+                />
+                <Footer />
+              </>
+            )}
+          />
+
+          <ProtectedRoute path="/favoritos">
             <>
-              <MainPage
+              <FavoritesPage
                 onCreateAccountClick={() => handleOpenAuthPopup("signup")}
                 onSignInClick={() => handleOpenAuthPopup("signin")}
-                onFavoriteClick={handleFavoriteClick}
-                weatherData={weatherData}
-                weatherLoading={weatherLoading}
-                weatherError={weatherError}
               />
               <Footer />
             </>
-          )}
+          </ProtectedRoute>
+
+          <Route path="*">
+            <NotFoundPage />
+          </Route>
+        </Switch>
+
+        <AuthPopup
+          isOpen={isAuthPopupOpen}
+          mode={authMode}
+          onClose={handleCloseAuthPopup}
+          onSwitchMode={handleSwitchAuthMode}
+          onSubmitSignUp={handleSubmitSignUp}
+          onSubmitSignIn={handleSubmitSignIn}
+          message={authMessage}
+          apiError={apiError}
         />
 
-        <Route
-          path="/lugares"
-          render={() => (
-            <>
-              <PlacesPage
-                onCreateAccountClick={() => handleOpenAuthPopup("signup")}
-                onSignInClick={() => handleOpenAuthPopup("signin")}
-                onFavoriteClick={handleFavoriteClick}
-              />
-              <Footer />
-            </>
-          )}
-        />
-
-        <ProtectedRoute path="/favoritos">
-          <>
-            <FavoritesPage
-              onCreateAccountClick={() => handleOpenAuthPopup("signup")}
-              onSignInClick={() => handleOpenAuthPopup("signin")}
-            />
-            <Footer />
-          </>
-        </ProtectedRoute>
-
-        <Route path="*">
-          <NotFoundPage />
-        </Route>
-      </Switch>
-
-      <AuthPopup
-        isOpen={isAuthPopupOpen}
-        mode={authMode}
-        onClose={handleCloseAuthPopup}
-        onSwitchMode={handleSwitchAuthMode}
-        onSubmitSignUp={handleSubmitSignUp}
-        onSubmitSignIn={handleSubmitSignIn}
-        message={authMessage}
-      />
-
-      <CookieBanner />
-    </div>
+        <CookieBanner />
+      </div>
+    </CurrentUserContext.Provider>
   );
 }
 

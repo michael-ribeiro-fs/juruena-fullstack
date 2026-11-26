@@ -53,3 +53,10 @@ export const AUTH_VALIDATION_MESSAGES = {
 };
 
 export const AUTH_PROTECTED_ROUTE_MESSAGE = 'Registre-se ou entre na sua conta para acessar seus favoritos.';
+
+export const AUTH_SIGNUP_SUCCESS_MESSAGE = 'Cadastro realizado com sucesso! Faça login para continuar.';
+
+export const AUTH_API_ERROR_MESSAGES = {
+  NETWORK_ERROR:
+    'Não foi possível conectar ao servidor. Verifique sua conexão e tente novamente.',
+};
